@@ -80,6 +80,10 @@ body.forgedseo-core .wp-site-blocks > .wp-block-template-part:first-of-type {
   z-index: 200;
   background: rgba(20, 20, 22, 0.94);
   color: var(--fseo-paper);
+  /* TT5 overlay uses has-contrast-color / has-base-background-color with !important.
+     Remap those presets so charcoal header, links, and overlay stay readable. */
+  --wp--preset--color--contrast: var(--fseo-paper);
+  --wp--preset--color--base: var(--fseo-charcoal);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(232, 155, 60, 0.22);
@@ -113,26 +117,30 @@ body.forgedseo-core .wp-block-site-title a:hover {
 }
 
 body.forgedseo-core .wp-block-navigation,
-body.forgedseo-core .wp-block-navigation .wp-block-navigation-item__content {
-  color: var(--fseo-paper);
+body.forgedseo-core .wp-block-navigation .wp-block-navigation-item__content,
+body.forgedseo-core .wp-block-navigation a:where(:not(.wp-element-button)) {
+  color: var(--fseo-paper) !important;
   font-weight: 500;
   text-decoration: none;
 }
 
 body.forgedseo-core .wp-block-navigation .wp-block-navigation-item__content:hover,
 body.forgedseo-core .wp-block-navigation .wp-block-navigation-item__content:focus,
-body.forgedseo-core .wp-block-navigation .current-menu-item > .wp-block-navigation-item__content {
-  color: var(--fseo-ember-hot);
+body.forgedseo-core .wp-block-navigation a:where(:not(.wp-element-button)):hover,
+body.forgedseo-core .wp-block-navigation a:where(:not(.wp-element-button)):focus,
+body.forgedseo-core .wp-block-navigation .current-menu-item > .wp-block-navigation-item__content,
+body.forgedseo-core .wp-block-navigation .wp-block-navigation-item__content[aria-current="page"] {
+  color: var(--fseo-ember-hot) !important;
 }
 
 body.forgedseo-core .wp-block-navigation__responsive-container-open,
 body.forgedseo-core .wp-block-navigation__responsive-container-close {
-  color: var(--fseo-paper);
+  color: var(--fseo-paper) !important;
 }
 
 body.forgedseo-core .wp-block-navigation__responsive-container.is-menu-open {
-  background-color: var(--fseo-charcoal-deep);
-  color: var(--fseo-paper);
+  background-color: var(--fseo-charcoal-deep) !important;
+  color: var(--fseo-paper) !important;
 }
 
 body.forgedseo-core .wp-block-navigation__submenu-container {
@@ -350,7 +358,14 @@ body.forgedseo-core footer .wp-block-heading {
 }
 
 body.forgedseo-core footer .wp-block-navigation .wp-block-navigation-item__content {
-  color: rgba(246, 243, 236, 0.82);
+  color: rgba(246, 243, 236, 0.82) !important;
+}
+
+body.forgedseo-core footer .wp-block-navigation .wp-block-navigation-item__content:hover,
+body.forgedseo-core footer .wp-block-navigation .wp-block-navigation-item__content:focus,
+body.forgedseo-core footer .wp-block-navigation .current-menu-item > .wp-block-navigation-item__content,
+body.forgedseo-core footer .wp-block-navigation .wp-block-navigation-item__content[aria-current="page"] {
+  color: var(--fseo-ember-hot) !important;
 }
 
 /* Forms */

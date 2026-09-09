@@ -12,7 +12,7 @@ add_shortcode('forgedseo_cta', 'forgedseo_core_cta_shortcode');
 /**
  * Primary marketing CTA.
  *
- * [forgedseo_cta text="Book a strategy call" href="/contact/" style="primary"]
+ * [forgedseo_cta text="Book a strategy call" href="/service/" style="primary"]
  *
  * @param array<string, string>|string $atts
  * @return string
@@ -22,7 +22,7 @@ function forgedseo_core_cta_shortcode($atts)
     $atts = shortcode_atts(
         array(
             'text'  => __('Book a strategy call', 'forgedseo-core'),
-            'href'  => '/contact/',
+            'href'  => '/service/',
             'style' => 'primary',
         ),
         $atts,

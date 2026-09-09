@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ForgedSEO Core
  * Description: Design tokens, typography, and marketing layout for forgedseo.com.
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: ForgedSEO
  * Text Domain: forgedseo-core
  * Requires at least: 6.7
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('FORGEDSEO_CORE_VERSION', '0.1.0');
+define('FORGEDSEO_CORE_VERSION', '0.1.1');
 define('FORGEDSEO_CORE_FILE', __FILE__);
 define('FORGEDSEO_CORE_DIR', plugin_dir_path(__FILE__));
 define('FORGEDSEO_CORE_URL', plugin_dir_url(__FILE__));
