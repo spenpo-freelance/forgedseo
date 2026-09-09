@@ -1,0 +1,13 @@
+*
+!.gitignore
+!.changie.yaml
+!CHANGELOG.md
+!README.md
+!src/
+!src/**
+!.github/
+!.github/**
+!.changes
+!.changes/**
+!scripts/
+!scripts/**

@@ -1,0 +1,48 @@
+name: Deploy ForgedSEO Core plugin
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/wp-content/plugins/forgedseo-core/**"
+      - ".github/workflows/deploy.yml"
+      - "scripts/hostinger-purge-cache.sh"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set deployment target
+        run: |
+          echo "DEPLOY_PATH=${{ secrets.FORGEDSEO_PATH }}/wp-content/plugins/forgedseo-core/" >> "$GITHUB_ENV"
+          echo "FORGEDSEO_SITE_PATH=${{ secrets.FORGEDSEO_PATH }}" >> "$GITHUB_ENV"
+          echo "Deploying to production (forgedseo.com)"
+
+      - name: Deploy via Rsync
+        uses: burnett01/rsync-deployments@5.2.1
+        with:
+          switches: -avzr --delete
+          path: src/wp-content/plugins/forgedseo-core/
+          remote_path: ${{ env.DEPLOY_PATH }}
+          remote_host: ${{ secrets.HOSTINGER_HOST }}
+          remote_user: ${{ secrets.HOSTINGER_USERNAME }}
+          remote_key: ${{ secrets.HOSTINGER_PRIVATE_KEY }}
+          remote_port: ${{ secrets.HOSTINGER_PORT }}
+
+      - name: Purge LiteSpeed and CDN cache
+        continue-on-error: true
+        env:
+          HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
+          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+          HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
+          HOSTINGER_PRIVATE_KEY: ${{ secrets.HOSTINGER_PRIVATE_KEY }}
+          HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
+          FORGEDSEO_PATH: ${{ env.FORGEDSEO_SITE_PATH }}
+          HOSTINGER_DOMAIN: forgedseo.com
+          HOSTINGER_WP_SOFTWARE_ID: "27052573"
+        run: bash scripts/hostinger-purge-cache.sh
