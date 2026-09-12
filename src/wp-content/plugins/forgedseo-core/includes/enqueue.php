@@ -22,14 +22,7 @@ function forgedseo_core_body_class($classes)
 
 function forgedseo_core_enqueue()
 {
-    wp_enqueue_style(
-        'forgedseo-fonts',
-        'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap',
-        array(),
-        null
-    );
-
-    $deps = array('forgedseo-fonts');
+    $deps = array();
     if (wp_style_is('hostinger-ai-style', 'registered')) {
         $deps[] = 'hostinger-ai-style';
     }
