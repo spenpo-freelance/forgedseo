@@ -72,6 +72,7 @@ src/wp-content/plugins/forgedseo-core/
   forgedseo-core.php    bootstrap
   includes/             enqueue + CTA shortcode
   assets/css/           design tokens + TT5 base styles
+  assets/fonts/         self-hosted Inter variable woff2 (SIL OFL)
   assets/js/            header scroll affordance
 scripts/hostinger-purge-cache.sh
 .github/workflows/deploy.yml
