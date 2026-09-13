@@ -1,6 +1,7 @@
 name: Deploy ForgedSEO Core plugin
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -24,6 +25,24 @@ jobs:
           echo "Deploying to production (forgedseo.com)"
 
       - name: Deploy via Rsync
+        id: rsync
+        continue-on-error: true
+        uses: burnett01/rsync-deployments@5.2.1
+        with:
+          switches: -avzr --delete
+          path: src/wp-content/plugins/forgedseo-core/
+          remote_path: ${{ env.DEPLOY_PATH }}
+          remote_host: ${{ secrets.HOSTINGER_HOST }}
+          remote_user: ${{ secrets.HOSTINGER_USERNAME }}
+          remote_key: ${{ secrets.HOSTINGER_PRIVATE_KEY }}
+          remote_port: ${{ secrets.HOSTINGER_PORT }}
+
+      - name: Wait before rsync retry
+        if: steps.rsync.outcome == 'failure'
+        run: sleep 20
+
+      - name: Retry rsync
+        if: steps.rsync.outcome == 'failure'
         uses: burnett01/rsync-deployments@5.2.1
         with:
           switches: -avzr --delete
