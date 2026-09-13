@@ -70,7 +70,7 @@ The Meow WordPress MCP connection is **content-only**: pages, posts, media, and 
 ```
 src/wp-content/plugins/forgedseo-core/
   forgedseo-core.php    bootstrap
-  includes/             enqueue + CTA shortcode
+  includes/             enqueue, CTA shortcode, AIOSEO meta→table sync
   assets/css/           design tokens + TT5 base styles
   assets/fonts/         self-hosted Inter variable woff2 (SIL OFL)
   assets/js/            header scroll affordance
