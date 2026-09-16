@@ -58,6 +58,112 @@ function forgedseo_core_homepage_seo_fields()
 }
 
 /**
+ * Production URL of the sideloaded 1200x630 OG jpeg (WordPress -1 suffix).
+ *
+ * Used when the Media Library attachment option is not available yet.
+ *
+ * @return string
+ */
+function forgedseo_core_og_image_fallback_url()
+{
+    return 'https://forgedseo.com/wp-content/uploads/2026/09/forgedseo-og-1200x630-1.jpg';
+}
+
+/**
+ * OG/Twitter custom-image fields from the sideloaded attachment, else the known URL.
+ *
+ * @return array<string, string>
+ */
+function forgedseo_core_aioseo_resolved_og_image_fields()
+{
+    if (function_exists('forgedseo_core_og_image_fields')) {
+        $fields = forgedseo_core_og_image_fields();
+        if (!empty($fields)) {
+            return $fields;
+        }
+    }
+
+    $url = forgedseo_core_og_image_fallback_url();
+
+    return array(
+        'og_image_type'            => 'custom_image',
+        'og_image_custom_url'      => $url,
+        'og_image_url'             => $url,
+        'og_image_width'           => '1200',
+        'og_image_height'          => '630',
+        'twitter_image_type'       => 'custom_image',
+        'twitter_image_custom_url' => $url,
+        'twitter_image_url'        => $url,
+    );
+}
+
+/**
+ * Title, description, and matching og/twitter text fields.
+ *
+ * @param string $title
+ * @param string $description
+ * @return array<string, string>
+ */
+function forgedseo_core_aioseo_title_description_fields($title, $description)
+{
+    return array(
+        'title'               => $title,
+        'description'         => $description,
+        'og_title'            => $title,
+        'og_description'      => $description,
+        'twitter_title'       => $title,
+        'twitter_description' => $description,
+    );
+}
+
+/**
+ * Marketing pages that get branded AIOSEO copy in 0.1.5 (Home is page 4).
+ *
+ * @return int[]
+ */
+function forgedseo_core_aioseo_marketing_post_ids()
+{
+    return array(25, 29, 37);
+}
+
+/**
+ * Canonical AIOSEO fields for Managed Service, Enterprise PaaS, and Blog.
+ *
+ * Home (4) stays on forgedseo_core_homepage_seo_fields() and is not listed here.
+ *
+ * @return array<int, array<string, string>>
+ */
+function forgedseo_core_marketing_page_seo_fields()
+{
+    $og = forgedseo_core_aioseo_resolved_og_image_fields();
+
+    $pages = array(
+        25 => array(
+            'title'       => 'Managed Service | ForgedSEO',
+            'description' => "Managed ForgedSEO \u{2014} we run research, content, and publishing so your search authority compounds.",
+        ),
+        29 => array(
+            'title'       => 'Enterprise PaaS | ForgedSEO',
+            'description' => "Enterprise PaaS \u{2014} orchestrate keyword campaigns on ForgedSEO\u{2019}s agentic platform.",
+        ),
+        37 => array(
+            'title'       => 'Blog | ForgedSEO',
+            'description' => 'Insights and playbooks from the ForgedSEO agentic content engine.',
+        ),
+    );
+
+    $out = array();
+    foreach ($pages as $post_id => $copy) {
+        $out[$post_id] = array_merge(
+            forgedseo_core_aioseo_title_description_fields($copy['title'], $copy['description']),
+            $og
+        );
+    }
+
+    return $out;
+}
+
+/**
  * Map of localization post meta keys to AIOSEO model columns.
  *
  * @return array<string, string>
@@ -120,15 +226,17 @@ function forgedseo_core_aioseo_posts_table()
 }
 
 /**
- * One-shot migrate after deploy/upgrade: force homepage, then any title mismatches.
+ * One-shot migrate after deploy/upgrade: homepage (0.1.3), then marketing pages (0.1.5).
  *
  * Rsync deploys do not re-run activation hooks, so this lives on init and
  * retries until AIOSEO is present and the write succeeds.
+ *
+ * Sites already at 0.1.3 skip the homepage rewrite so Home stays branded.
  */
 function forgedseo_core_aioseo_maybe_migrate()
 {
     $done = (string) get_option(forgedseo_core_aioseo_sync_option(), '');
-    if (version_compare($done, '0.1.3', '>=')) {
+    if (version_compare($done, '0.1.5', '>=')) {
         return;
     }
 
@@ -136,12 +244,21 @@ function forgedseo_core_aioseo_maybe_migrate()
         return;
     }
 
-    $home_ok = forgedseo_core_aioseo_force_homepage();
-    forgedseo_core_aioseo_sync_mismatched();
-
-    if ($home_ok) {
+    if (version_compare($done, '0.1.3', '<')) {
+        $home_ok = forgedseo_core_aioseo_force_homepage();
+        forgedseo_core_aioseo_sync_mismatched();
+        if (!$home_ok) {
+            return;
+        }
         update_option(forgedseo_core_aioseo_sync_option(), '0.1.3', true);
+        $done = '0.1.3';
     }
+
+    if (!forgedseo_core_aioseo_force_marketing_pages()) {
+        return;
+    }
+
+    update_option(forgedseo_core_aioseo_sync_option(), '0.1.5', true);
 }
 
 /**
@@ -157,6 +274,26 @@ function forgedseo_core_aioseo_force_homepage()
     }
 
     return forgedseo_core_aioseo_save_fields($post_id, forgedseo_core_homepage_seo_fields());
+}
+
+/**
+ * Write canonical Managed Service / Enterprise / Blog SEO through AIOSEO.
+ *
+ * @return bool True when every listed page exists and save_fields succeeds.
+ */
+function forgedseo_core_aioseo_force_marketing_pages()
+{
+    $all = forgedseo_core_marketing_page_seo_fields();
+    $ok = true;
+
+    foreach (forgedseo_core_aioseo_marketing_post_ids() as $post_id) {
+        if (!isset($all[$post_id]) || !get_post($post_id)) {
+            return false;
+        }
+        $ok = forgedseo_core_aioseo_save_fields($post_id, $all[$post_id]) && $ok;
+    }
+
+    return $ok;
 }
 
 /**
