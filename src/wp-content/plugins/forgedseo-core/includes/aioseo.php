@@ -41,7 +41,7 @@ function forgedseo_core_homepage_seo_fields()
     $title = "ForgedSEO \u{2014} Agentic Content Engine";
     $description = 'ForgedSEO is the agentic content engine for teams that need search authority without an in-house SEO army. Managed service or Enterprise PaaS.';
 
-    return array(
+    $fields = array(
         'title'                => $title,
         'description'          => $description,
         'og_title'             => $title,
@@ -49,6 +49,12 @@ function forgedseo_core_homepage_seo_fields()
         'twitter_title'        => $title,
         'twitter_description'  => $description,
     );
+
+    if (function_exists('forgedseo_core_og_image_fields')) {
+        $fields = array_merge($fields, forgedseo_core_og_image_fields());
+    }
+
+    return $fields;
 }
 
 /**
@@ -76,12 +82,20 @@ function forgedseo_core_aioseo_meta_map()
 function forgedseo_core_aioseo_allowed_columns()
 {
     return array(
-        'title'               => true,
-        'description'         => true,
-        'og_title'            => true,
-        'og_description'      => true,
-        'twitter_title'       => true,
-        'twitter_description' => true,
+        'title'                     => true,
+        'description'               => true,
+        'og_title'                  => true,
+        'og_description'            => true,
+        'og_image_type'             => true,
+        'og_image_custom_url'       => true,
+        'og_image_url'              => true,
+        'og_image_width'            => true,
+        'og_image_height'           => true,
+        'twitter_title'             => true,
+        'twitter_description'       => true,
+        'twitter_image_type'        => true,
+        'twitter_image_custom_url'  => true,
+        'twitter_image_url'         => true,
     );
 }
 
@@ -333,4 +347,63 @@ function forgedseo_core_aioseo_mismatched_post_ids()
     }
 
     return array_map('intval', $ids);
+}
+
+/**
+ * Point AIOSEO's global Facebook/Twitter default social image at a URL.
+ *
+ * Sets only image source/URL/size fields. Other social options are untouched.
+ *
+ * @param string $url Absolute attachment URL.
+ * @return bool
+ */
+function forgedseo_core_aioseo_set_default_social_image($url)
+{
+    if (!is_string($url) || $url === '' || !function_exists('aioseo')) {
+        return false;
+    }
+
+    try {
+        $aioseo = aioseo();
+        if (!is_object($aioseo) || empty($aioseo->options)) {
+            return false;
+        }
+
+        $social = $aioseo->options->social;
+        if (!is_object($social)) {
+            return false;
+        }
+
+        $wrote = false;
+
+        if (isset($social->facebook->general)) {
+            $social->facebook->general->defaultImageSourcePosts = 'custom';
+            $social->facebook->general->defaultImagePosts = $url;
+            $social->facebook->general->defaultImagePostsWidth = 1200;
+            $social->facebook->general->defaultImagePostsHeight = 630;
+            $wrote = true;
+        }
+
+        if (isset($social->facebook->homePage)) {
+            $social->facebook->homePage->image = $url;
+            $social->facebook->homePage->imageWidth = 1200;
+            $social->facebook->homePage->imageHeight = 630;
+            $wrote = true;
+        }
+
+        if (isset($social->twitter->general)) {
+            $social->twitter->general->defaultImageSourcePosts = 'custom';
+            $social->twitter->general->defaultImagePosts = $url;
+            $wrote = true;
+        }
+
+        if (isset($social->twitter->homePage)) {
+            $social->twitter->homePage->image = $url;
+            $wrote = true;
+        }
+
+        return $wrote;
+    } catch (\Throwable $e) {
+        return false;
+    }
 }
