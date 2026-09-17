@@ -133,6 +133,27 @@ body.forgedseo-core .wp-block-site-title a:hover {
   color: var(--fseo-ember) !important;
 }
 
+body.forgedseo-core header .wp-block-site-logo,
+body.forgedseo-core footer .wp-block-site-logo,
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part:first-of-type .wp-block-site-logo,
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part:last-of-type .wp-block-site-logo {
+  line-height: 0;
+}
+
+body.forgedseo-core header .wp-block-site-logo a,
+body.forgedseo-core footer .wp-block-site-logo a,
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part .wp-block-site-logo a {
+  display: inline-block;
+  line-height: 0;
+}
+
+body.forgedseo-core header .wp-block-site-logo img,
+body.forgedseo-core footer .wp-block-site-logo img,
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part .wp-block-site-logo img {
+  display: block;
+  height: auto;
+}
+
 body.forgedseo-core .wp-block-navigation,
 body.forgedseo-core .wp-block-navigation .wp-block-navigation-item__content,
 body.forgedseo-core .wp-block-navigation a:where(:not(.wp-element-button)) {
