@@ -1,10 +1,15 @@
 <?php
 /**
- * Sync `_aioseo_*` post meta into AIOSEO's post model / aioseo_posts table.
+ * Sync `_aioseo_*` post meta into AIOSEO's post model / aioseo_posts table,
+ * and keep Knowledge Graph Organization logo + contactPoint in JSON-LD.
  *
  * AIOSEO 4+/5+ stores titles and social tags in wp_aioseo_posts. Duplicate
  * `_aioseo_*` post meta is for localization (WPML etc.) and is ignored on
  * output unless saved through Models\Post.
+ *
+ * Organization schema: AIOSEO Knowledge Graph options hold organizationLogo
+ * and email; AIOSEO still emits top-level `email` rather than contactPoint,
+ * so `aioseo_schema_output` always adds logo (ImageObject) + contactPoint.
  */
 
 if (!defined('ABSPATH')) {
@@ -14,6 +19,7 @@ if (!defined('ABSPATH')) {
 add_action('init', 'forgedseo_core_aioseo_maybe_migrate', 5);
 add_action('added_post_meta', 'forgedseo_core_aioseo_on_meta_change', 10, 4);
 add_action('updated_post_meta', 'forgedseo_core_aioseo_on_meta_change', 10, 4);
+add_filter('aioseo_schema_output', 'forgedseo_core_aioseo_enrich_organization_schema');
 
 /**
  * WordPress page ID for forgedseo.com homepage.
@@ -29,6 +35,145 @@ function forgedseo_core_homepage_post_id()
 function forgedseo_core_aioseo_sync_option()
 {
     return 'forgedseo_core_aioseo_sync';
+}
+
+/**
+ * Square brand mark used for Organization.logo (not the 16:9 JPEG or header lockup).
+ *
+ * @return int
+ */
+function forgedseo_core_organization_logo_attachment_id()
+{
+    return 22;
+}
+
+/**
+ * Production URL of forged-seo-s-logo-dim-1.png (media 22, 510×509).
+ *
+ * @return string
+ */
+function forgedseo_core_organization_logo_fallback_url()
+{
+    return 'https://forgedseo.com/wp-content/uploads/2026/03/forged-seo-s-logo-dim-1.png';
+}
+
+/**
+ * @return int
+ */
+function forgedseo_core_organization_logo_width()
+{
+    return 510;
+}
+
+/**
+ * @return int
+ */
+function forgedseo_core_organization_logo_height()
+{
+    return 509;
+}
+
+/**
+ * @return string
+ */
+function forgedseo_core_organization_email()
+{
+    return 'forgedseo@spenpo.com';
+}
+
+/**
+ * Schema.org ContactPoint.contactType for Organization.
+ *
+ * @return string
+ */
+function forgedseo_core_organization_contact_type()
+{
+    return 'customer support';
+}
+
+/**
+ * Whether a URL is the oversized 16:9 JPEG (media 6) or header lockup (media 33).
+ *
+ * @param string $url
+ * @return bool
+ */
+function forgedseo_core_organization_logo_url_is_forbidden($url)
+{
+    if (!is_string($url) || $url === '') {
+        return true;
+    }
+
+    $haystack = strtolower($url);
+    if (strpos($haystack, 'forged-seo-16-9-logo') !== false) {
+        return true;
+    }
+    if (strpos($haystack, 'forged-seo-app-logo') !== false) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Absolute URL of the square Organization logo (media 22), never 6 or 33.
+ *
+ * @return string
+ */
+function forgedseo_core_organization_logo_url()
+{
+    $fallback = forgedseo_core_organization_logo_fallback_url();
+    $id = forgedseo_core_organization_logo_attachment_id();
+
+    if (function_exists('wp_get_attachment_image_url')) {
+        $url = wp_get_attachment_image_url($id, 'full');
+        if (is_string($url) && $url !== '' && !forgedseo_core_organization_logo_url_is_forbidden($url)) {
+            return $url;
+        }
+    }
+
+    return $fallback;
+}
+
+/**
+ * AIOSEO-native ImageObject for Organization.logo.
+ *
+ * @param string $base_url Trailing-slash page/home URL used for @id.
+ * @return array<string, mixed>
+ */
+function forgedseo_core_organization_logo_image_object($base_url = '')
+{
+    $base = is_string($base_url) ? $base_url : '';
+    if ($base === '' && function_exists('home_url') && function_exists('trailingslashit')) {
+        $base = trailingslashit(home_url());
+    }
+    if ($base === '') {
+        $base = 'https://forgedseo.com/';
+    }
+    if (substr($base, -1) !== '/') {
+        $base .= '/';
+    }
+
+    return array(
+        '@type'  => 'ImageObject',
+        '@id'    => $base . '#organizationLogo',
+        'url'    => forgedseo_core_organization_logo_url(),
+        'width'  => forgedseo_core_organization_logo_width(),
+        'height' => forgedseo_core_organization_logo_height(),
+    );
+}
+
+/**
+ * Schema.org ContactPoint for Organization (email only; no invented social URLs).
+ *
+ * @return array<string, string>
+ */
+function forgedseo_core_organization_contact_point()
+{
+    return array(
+        '@type'       => 'ContactPoint',
+        'email'       => forgedseo_core_organization_email(),
+        'contactType' => forgedseo_core_organization_contact_type(),
+    );
 }
 
 /**
@@ -226,39 +371,50 @@ function forgedseo_core_aioseo_posts_table()
 }
 
 /**
- * One-shot migrate after deploy/upgrade: homepage (0.1.3), then marketing pages (0.1.5).
+ * One-shot migrate after deploy/upgrade: homepage (0.1.3), marketing pages
+ * (0.1.5), then Knowledge Graph Organization logo + email (0.1.7).
  *
  * Rsync deploys do not re-run activation hooks, so this lives on init and
  * retries until AIOSEO is present and the write succeeds.
  *
  * Sites already at 0.1.3 skip the homepage rewrite so Home stays branded.
+ * Sites already at 0.1.5 skip marketing-page rewrites.
  */
 function forgedseo_core_aioseo_maybe_migrate()
 {
     $done = (string) get_option(forgedseo_core_aioseo_sync_option(), '');
-    if (version_compare($done, '0.1.5', '>=')) {
+    if (version_compare($done, '0.1.7', '>=')) {
         return;
     }
 
-    if (!forgedseo_core_aioseo_has_model() && !forgedseo_core_aioseo_table_exists()) {
-        return;
-    }
-
-    if (version_compare($done, '0.1.3', '<')) {
-        $home_ok = forgedseo_core_aioseo_force_homepage();
-        forgedseo_core_aioseo_sync_mismatched();
-        if (!$home_ok) {
+    if (version_compare($done, '0.1.5', '<')) {
+        if (!forgedseo_core_aioseo_has_model() && !forgedseo_core_aioseo_table_exists()) {
             return;
         }
-        update_option(forgedseo_core_aioseo_sync_option(), '0.1.3', true);
-        $done = '0.1.3';
+
+        if (version_compare($done, '0.1.3', '<')) {
+            $home_ok = forgedseo_core_aioseo_force_homepage();
+            forgedseo_core_aioseo_sync_mismatched();
+            if (!$home_ok) {
+                return;
+            }
+            update_option(forgedseo_core_aioseo_sync_option(), '0.1.3', true);
+            $done = '0.1.3';
+        }
+
+        if (!forgedseo_core_aioseo_force_marketing_pages()) {
+            return;
+        }
+
+        update_option(forgedseo_core_aioseo_sync_option(), '0.1.5', true);
+        $done = '0.1.5';
     }
 
-    if (!forgedseo_core_aioseo_force_marketing_pages()) {
+    if (!forgedseo_core_aioseo_force_organization_schema()) {
         return;
     }
 
-    update_option(forgedseo_core_aioseo_sync_option(), '0.1.5', true);
+    update_option(forgedseo_core_aioseo_sync_option(), '0.1.7', true);
 }
 
 /**
@@ -543,4 +699,117 @@ function forgedseo_core_aioseo_set_default_social_image($url)
     } catch (\Throwable $e) {
         return false;
     }
+}
+
+/**
+ * Write AIOSEO Knowledge Graph Organization logo + email. Does not set sameAs.
+ *
+ * @return bool
+ */
+function forgedseo_core_aioseo_force_organization_schema()
+{
+    if (!function_exists('aioseo')) {
+        return false;
+    }
+
+    try {
+        $aioseo = aioseo();
+        if (!is_object($aioseo) || empty($aioseo->options)) {
+            return false;
+        }
+
+        $schema = $aioseo->options->searchAppearance->global->schema;
+        if (!is_object($schema)) {
+            return false;
+        }
+
+        $schema->organizationLogo = forgedseo_core_organization_logo_url();
+        $schema->email = forgedseo_core_organization_email();
+
+        return true;
+    } catch (\Throwable $e) {
+        return false;
+    }
+}
+
+/**
+ * Whether a schema graph node is the Knowledge Graph Organization.
+ *
+ * @param mixed $item
+ * @return bool
+ */
+function forgedseo_core_aioseo_graph_item_is_organization($item)
+{
+    if (!is_array($item)) {
+        return false;
+    }
+
+    $type = isset($item['@type']) ? $item['@type'] : '';
+    if ($type === 'Organization') {
+        return true;
+    }
+    if (is_array($type) && in_array('Organization', $type, true)) {
+        return true;
+    }
+
+    $id = isset($item['@id']) ? (string) $item['@id'] : '';
+    if ($id !== '' && substr($id, -13) === '#organization' && isset($item['name'])) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Home URL with trailing slash, derived from an Organization @id when present.
+ *
+ * @param array<string, mixed> $item
+ * @return string
+ */
+function forgedseo_core_aioseo_organization_base_url($item)
+{
+    $id = isset($item['@id']) ? (string) $item['@id'] : '';
+    if ($id !== '' && substr($id, -13) === '#organization') {
+        return substr($id, 0, -13);
+    }
+
+    if (function_exists('home_url') && function_exists('trailingslashit')) {
+        return trailingslashit(home_url());
+    }
+
+    return 'https://forgedseo.com/';
+}
+
+/**
+ * Ensure Organization JSON-LD has square-mark logo + contactPoint.
+ *
+ * Leaves BreadcrumbList / WebPage / WebSite untouched. Does not invent sameAs.
+ *
+ * @param mixed $graph
+ * @return mixed
+ */
+function forgedseo_core_aioseo_enrich_organization_schema($graph)
+{
+    if (!is_array($graph)) {
+        return $graph;
+    }
+
+    foreach ($graph as $key => $item) {
+        if (!forgedseo_core_aioseo_graph_item_is_organization($item)) {
+            continue;
+        }
+
+        $logo = forgedseo_core_organization_logo_image_object(
+            forgedseo_core_aioseo_organization_base_url($item)
+        );
+        $item['logo'] = $logo;
+        if (!empty($logo['@id'])) {
+            $item['image'] = array('@id' => $logo['@id']);
+        }
+        $item['contactPoint'] = forgedseo_core_organization_contact_point();
+
+        $graph[$key] = $item;
+    }
+
+    return $graph;
 }
