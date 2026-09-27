@@ -11,3 +11,9 @@
 !.changes/**
 !scripts/
 !scripts/**
+scripts/**/node_modules/
+scripts/**/node_modules/**
+!.cursor/
+!.cursor/environment.json
+!.cursor/rules/
+!.cursor/rules/**

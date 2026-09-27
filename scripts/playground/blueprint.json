@@ -1,0 +1,52 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "steps": [
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "wordpress.org/themes",
+        "slug": "twentytwentyfive"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "all-in-one-seo-pack"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "activatePlugin",
+      "pluginName": "ForgedSEO Core",
+      "pluginPath": "forgedseo-core/forgedseo-core.php"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginName": "ForgedSEO Dev Seed",
+      "pluginPath": "forgedseo-dev-seed/forgedseo-dev-seed.php"
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "ForgedSEO",
+        "blogdescription": "Agentic Content Engine",
+        "permalink_structure": "/%postname%/"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; $user = get_user_by('login', 'admin'); if ($user) { wp_set_password('admin', $user->ID); } ?>"
+    }
+  ]
+}

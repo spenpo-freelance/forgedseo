@@ -1,0 +1,56 @@
+---
+description: Local WordPress Playground site for verifying forgedseo-core front-end work
+alwaysApply: true
+---
+
+# Local WordPress (Playground)
+
+This repo boots a real WordPress site for Cloud Agents. Use it instead of stand-in HTML pages when verifying front-end, theme, CSS, or PHP changes in `forgedseo-core`.
+
+`wp-now` is deprecated. The environment uses `@wp-playground/cli` (PHP.wasm + SQLite, no Docker, no MariaDB, no apt PHP, no WP-CLI).
+
+## URL and login
+
+- Site: `http://127.0.0.1:8080`
+- Admin: `http://127.0.0.1:8080/wp-admin` — `admin` / `admin`
+- Port `8080` is exposed from `.cursor/environment.json`.
+
+The Cloud Agent `install` step runs `scripts/cloud-agent-setup.sh`. The `wordpress` terminal runs `scripts/cloud-agent-start.sh` on boot. If the site is not up yet, start it:
+
+```bash
+bash scripts/cloud-agent-setup.sh
+bash scripts/cloud-agent-start.sh
+```
+
+Wait until `curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/` returns `200` before screenshotting. The public site starts logged out (visitor view). Log in at `/wp-admin` when you need admin.
+
+## Live plugin mount
+
+`src/wp-content/plugins/forgedseo-core` is mounted into the Playground site. Edits in the repo show up on reload. Do not copy the plugin into `$HOME/forgedseo-wp-dev`. Do not bump the plugin version for environment work.
+
+The Playground-only seed plugin lives under `scripts/playground/forgedseo-dev-seed/` and is mounted at runtime. Never put it inside `src/wp-content/plugins/forgedseo-core`.
+
+## Verify on this site
+
+Screenshot the local site (homepage plus any inner page you changed) at desktop and mobile widths. That is the required proof that forgedseo-core CSS, JS, block markup, and PHP ran without warnings.
+
+Do not build mock HTML pages that only load `forgedseo.css` / `forgedseo.js` as a substitute.
+
+Useful paths: `/`, `/service/`, `/enterprise/`, `/about/`, `/blog/`.
+
+Final layout checks still happen on the real site (`https://forgedseo.com`). Playground uses Twenty Twenty-Five (same as production) but does not include LiteSpeed Cache, Hostinger-bundled plugins, Site Kit, or other services that need API keys. Treat local screenshots as proof of the plugin change; confirm header/footer/pixel match on production when that matters.
+
+## Reseed
+
+Content is seeded once (option `forgedseo_dev_seeded`). To apply seed changes:
+
+- Logged in: visit `http://127.0.0.1:8080/?forgedseo_reseed=1`
+- Wipe SQLite + WordPress files and boot clean: `bash scripts/cloud-agent-start.sh --reset`
+
+`bash scripts/cloud-agent-start.sh --warmup` starts the site, waits until `http://localhost:8080` responds, then returns (used by setup).
+
+## What this is not
+
+Production (`https://forgedseo.com`) also runs LiteSpeed Cache, Site Kit by Google, and Hostinger-bundled plugins. Those are omitted here (cache fights live reload; Site Kit needs API keys; Hostinger plugins are not on WordPress.org). All in One SEO is installed because forgedseo-core writes to `aioseo_posts`.
+
+Never write to production from this environment. Never commit Playground state, SQLite files, or credentials.
