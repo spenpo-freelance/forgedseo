@@ -9,12 +9,13 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('FORGEDSEO_DEV_SEED_VERSION', '1');
+define('FORGEDSEO_DEV_SEED_VERSION', '2');
 define('FORGEDSEO_DEV_SEED_OPTION', 'forgedseo_dev_seeded');
 define('FORGEDSEO_DEV_SEED_MEDIA_DIR', '/wordpress/wp-content/uploads/forgedseo-seed-media');
 
 add_action('init', 'forgedseo_dev_seed_maybe_run', 50);
 add_action('init', 'forgedseo_dev_seed_handle_reseed', 45);
+add_action('init', 'forgedseo_dev_seed_ensure_nav', 60);
 
 /**
  * Admin-only reseed: visit /?forgedseo_reseed=1 while logged in.
@@ -62,6 +63,7 @@ function forgedseo_dev_seed_run()
     }
 
     forgedseo_dev_seed_drop_default_content();
+    forgedseo_dev_seed_free_import_id(4);
     $media = forgedseo_dev_seed_media();
 
     $home_id = forgedseo_dev_seed_page(
@@ -136,6 +138,35 @@ function forgedseo_dev_seed_drop_default_content()
     if ($sample instanceof WP_Post) {
         wp_delete_post($sample->ID, true);
     }
+}
+
+/**
+ * Drop a leftover default post so import_id can reuse it (TT5 Navigation is often ID 4).
+ *
+ * @param int $id
+ * @return void
+ */
+function forgedseo_dev_seed_free_import_id($id)
+{
+    $id = absint($id);
+    if ($id <= 0) {
+        return;
+    }
+
+    $post = get_post($id);
+    if (!$post instanceof WP_Post) {
+        return;
+    }
+
+    if ($post->post_type === 'page' && $post->post_name === 'home') {
+        return;
+    }
+
+    if ($post->post_type === 'wp_navigation' && $post->post_name === 'primary') {
+        return;
+    }
+
+    wp_delete_post($id, true);
 }
 
 /**
@@ -606,23 +637,47 @@ HTML;
     }
 
     if ($nav_id) {
-        forgedseo_dev_seed_bind_header_nav($nav_id);
+        forgedseo_dev_seed_bind_template_nav($nav_id);
     }
 }
 
 /**
- * Point Twenty Twenty-Five's header navigation at the seeded menu when possible.
+ * Re-bind Primary nav after chrome/theme customizes header/footer on later requests.
+ *
+ * @return void
+ */
+function forgedseo_dev_seed_ensure_nav()
+{
+    $existing = get_posts(
+        array(
+            'post_type'   => 'wp_navigation',
+            'post_status' => 'publish',
+            'title'       => 'Primary',
+            'numberposts' => 1,
+        )
+    );
+    if ($existing) {
+        forgedseo_dev_seed_bind_template_nav((int) $existing[0]->ID);
+    }
+}
+
+/**
+ * Point Twenty Twenty-Five header/footer navigation at the seeded Primary menu.
  *
  * @param int $nav_id
  * @return void
  */
-function forgedseo_dev_seed_bind_header_nav($nav_id)
+function forgedseo_dev_seed_bind_template_nav($nav_id)
 {
     if (!function_exists('get_block_templates') || !function_exists('wp_update_post')) {
         return;
     }
 
-    $parts = get_block_templates(array('slug__in' => array('header')), 'wp_template_part');
+    $ref = '<!-- wp:navigation {"ref":' . (int) $nav_id . '} /-->';
+    $parts = get_block_templates(
+        array('slug__in' => array('header', 'footer')),
+        'wp_template_part'
+    );
     if (!is_array($parts)) {
         return;
     }
@@ -631,19 +686,29 @@ function forgedseo_dev_seed_bind_header_nav($nav_id)
         if (empty($part->content) || empty($part->wp_id)) {
             continue;
         }
+
         $updated = preg_replace(
             '/<!-- wp:navigation(\s+\{[^}]*\})? \/\-->/',
-            '<!-- wp:navigation {"ref":' . (int) $nav_id . '} /-->',
-            $part->content,
-            1
+            $ref,
+            $part->content
         );
-        if (is_string($updated) && $updated !== $part->content) {
-            wp_update_post(
-                array(
-                    'ID'           => (int) $part->wp_id,
-                    'post_content' => $updated,
-                )
-            );
+        if (!is_string($updated)) {
+            $updated = $part->content;
         }
+        $updated = preg_replace(
+            '/<!-- wp:navigation\b[^>]*-->.*?<!-- \/wp:navigation -->/s',
+            $ref,
+            $updated
+        );
+        if (!is_string($updated) || $updated === $part->content) {
+            continue;
+        }
+
+        wp_update_post(
+            array(
+                'ID'           => (int) $part->wp_id,
+                'post_content' => $updated,
+            )
+        );
     }
 }
