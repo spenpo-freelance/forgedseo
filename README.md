@@ -13,7 +13,7 @@ Mirrors the Zoomies stack: plugin-centric shipping under `src/wp-content/plugins
 3. In wp-admin → Plugins, **install is just the rsync**; **activate ForgedSEO Core**.
 4. Rebuild marketing pages in the Site Editor / block editor. Use `[forgedseo_cta]` for the primary call-to-action if you want a branded button without custom CSS classes.
 
-The plugin adds body class `forgedseo-core`, enqueues Inter, and loads `assets/css/forgedseo.css` so TT5 header, hero, sections, buttons, cards, and footer pick up forge-metal tokens (charcoal, ember/amber, paper whites). It does **not** hard-require Hostinger theme CSS.
+The plugin adds body class `forgedseo-core`, enqueues self-hosted Inter, unregisters Twenty Twenty-Five’s unused Fira Code face (Manrope stays), and loads `assets/css/forgedseo.css` so TT5 header, hero, sections, buttons, cards, and footer pick up forge-metal tokens (charcoal, ember/amber, paper whites). It does **not** hard-require Hostinger theme CSS.
 
 ## Deploy
 
