@@ -32,6 +32,7 @@
   --fseo-shadow: 0 12px 32px rgba(12, 12, 14, 0.08);
   --fseo-font-body: Inter, system-ui, sans-serif;
   --fseo-font-display: Inter, system-ui, sans-serif;
+  --fseo-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --fseo-header-height: 4.25rem;
   --fseo-section-space: clamp(3.5rem, 6vw, 5.5rem);
 }
@@ -39,6 +40,7 @@
 body.forgedseo-core {
   --wp--preset--font-family--body: var(--fseo-font-body);
   --wp--preset--font-family--heading: var(--fseo-font-display);
+  --wp--preset--font-family--fira-code: var(--fseo-font-mono);
   --wp--preset--color--base: var(--fseo-paper);
   --wp--preset--color--contrast: var(--fseo-ink);
   --wp--preset--color--accent-1: var(--fseo-ember);
@@ -276,12 +278,18 @@ body.forgedseo-core .fseo-section-title {
   color: var(--fseo-white);
 }
 
-/* Buttons: TT5 + plugin CTA */
+/* Buttons: fseo-btn is canonical; leftover core/button matches it (Home, blog empty). */
+body.forgedseo-core .wp-block-buttons .wp-block-button__link {
+  width: auto;
+}
+
 body.forgedseo-core .wp-block-button__link,
+body.forgedseo-core .wp-element-button,
 .fseo-btn {
   display: inline-block;
-  padding: 0.85rem 1.35rem;
-  border-radius: 999px;
+  box-sizing: border-box;
+  padding: 0.85rem 1.35rem !important;
+  border-radius: 999px !important;
   font-family: var(--fseo-font-body);
   font-weight: 600;
   font-size: 0.95rem;
@@ -289,41 +297,80 @@ body.forgedseo-core .wp-block-button__link,
   letter-spacing: 0.01em;
   text-decoration: none !important;
   border: 1px solid transparent;
+  box-shadow: none;
   transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
-body.forgedseo-core .wp-element-button,
-body.forgedseo-core .wp-block-button__link,
+body.forgedseo-core .wp-block-button:not([class*="is-style-outline"]) .wp-block-button__link,
 .fseo-btn--primary {
   background: var(--fseo-ember) !important;
   color: var(--fseo-charcoal-deep) !important;
   border-color: var(--fseo-ember) !important;
 }
 
-body.forgedseo-core .wp-element-button:hover,
-body.forgedseo-core .wp-block-button__link:hover,
-.fseo-btn--primary:hover {
+body.forgedseo-core .wp-block-button:not([class*="is-style-outline"]) .wp-block-button__link:hover,
+body.forgedseo-core .wp-block-button:not([class*="is-style-outline"]) .wp-block-button__link:focus,
+.fseo-btn--primary:hover,
+.fseo-btn--primary:focus {
   background: var(--fseo-ember-hot) !important;
   color: var(--fseo-charcoal-deep) !important;
+  border-color: var(--fseo-ember-hot) !important;
 }
 
-body.forgedseo-core .wp-block-button.is-style-outline .wp-block-button__link,
+body.forgedseo-core .wp-block-button[class*="is-style-outline"] .wp-block-button__link,
 .fseo-btn--secondary {
   background: transparent !important;
   color: var(--fseo-charcoal) !important;
   border-color: var(--fseo-charcoal) !important;
 }
 
-body.forgedseo-core .wp-block-cover .wp-block-button.is-style-outline .wp-block-button__link,
+body.forgedseo-core .wp-block-button[class*="is-style-outline"] .wp-block-button__link:hover,
+body.forgedseo-core .wp-block-button[class*="is-style-outline"] .wp-block-button__link:focus,
+.fseo-btn--secondary:hover,
+.fseo-btn--secondary:focus {
+  background: transparent !important;
+  color: var(--fseo-charcoal-deep) !important;
+  border-color: var(--fseo-ember) !important;
+}
+
+body.forgedseo-core .wp-block-cover .wp-block-button[class*="is-style-outline"] .wp-block-button__link,
 .fseo-section--dark .fseo-btn--secondary {
   color: var(--fseo-paper) !important;
   border-color: rgba(246, 243, 236, 0.55) !important;
+}
+
+body.forgedseo-core .wp-block-cover .wp-block-button[class*="is-style-outline"] .wp-block-button__link:hover,
+body.forgedseo-core .wp-block-cover .wp-block-button[class*="is-style-outline"] .wp-block-button__link:focus,
+.fseo-section--dark .fseo-btn--secondary:hover,
+.fseo-section--dark .fseo-btn--secondary:focus {
+  color: var(--fseo-ember-hot) !important;
+  border-color: var(--fseo-ember) !important;
+  background: transparent !important;
 }
 
 .fseo-btn--ghost {
   background: transparent !important;
   color: var(--fseo-ember) !important;
   border-color: var(--fseo-ember) !important;
+}
+
+.fseo-btn--ghost:hover,
+.fseo-btn--ghost:focus {
+  color: var(--fseo-ember-hot) !important;
+  border-color: var(--fseo-ember-hot) !important;
+}
+
+/* Unused TT5 Fira Code preset — keep Manrope; mono falls back to the system stack. */
+body.forgedseo-core code,
+body.forgedseo-core kbd,
+body.forgedseo-core samp,
+body.forgedseo-core pre,
+body.forgedseo-core .wp-block-code,
+body.forgedseo-core .wp-block-code code,
+body.forgedseo-core .wp-block-preformatted,
+body.forgedseo-core .wp-block-verse,
+body.forgedseo-core .has-fira-code-font-family {
+  font-family: var(--fseo-font-mono);
 }
 
 .fseo-cta-row {

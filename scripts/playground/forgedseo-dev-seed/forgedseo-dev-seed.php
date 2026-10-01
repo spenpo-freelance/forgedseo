@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('FORGEDSEO_DEV_SEED_VERSION', '2');
+define('FORGEDSEO_DEV_SEED_VERSION', '3');
 define('FORGEDSEO_DEV_SEED_OPTION', 'forgedseo_dev_seeded');
 define('FORGEDSEO_DEV_SEED_MEDIA_DIR', '/wordpress/wp-content/uploads/forgedseo-seed-media');
 
@@ -29,6 +29,9 @@ function forgedseo_dev_seed_handle_reseed()
         return;
     }
     delete_option(FORGEDSEO_DEV_SEED_OPTION);
+    if (function_exists('forgedseo_core_cta_option')) {
+        delete_option(forgedseo_core_cta_option());
+    }
 }
 
 /**
@@ -41,6 +44,10 @@ function forgedseo_dev_seed_maybe_run()
     }
     if (function_exists('wp_installing') && wp_installing()) {
         return;
+    }
+
+    if (function_exists('forgedseo_core_cta_option')) {
+        delete_option(forgedseo_core_cta_option());
     }
 
     forgedseo_dev_seed_run();
@@ -355,6 +362,50 @@ function forgedseo_dev_seed_cta($text, $href, $style = 'primary')
 }
 
 /**
+ * Production-like core/buttons group so the 0.1.10 migrate has something to rewrite.
+ *
+ * @param array<int, array{text:string, href:string, outline?:bool}> $buttons
+ * @return string
+ */
+function forgedseo_dev_seed_core_buttons($buttons)
+{
+    $inner = '';
+    foreach ($buttons as $button) {
+        $text = $button['text'];
+        $href = $button['href'];
+        $outline = !empty($button['outline']);
+        $comment = $outline
+            ? '<!-- wp:button {"className":"is-style-outline"} -->'
+            : '<!-- wp:button -->';
+        $class = $outline ? 'wp-block-button is-style-outline' : 'wp-block-button';
+        $inner .= $comment . "\n"
+            . '<div class="' . $class . '"><a class="wp-block-button__link wp-element-button" href="'
+            . $href . '">' . $text . "</a></div>\n"
+            . "<!-- /wp:button -->\n\n";
+    }
+
+    return "<!-- wp:buttons -->\n"
+        . '<div class="wp-block-buttons">' . trim($inner) . "</div>\n"
+        . "<!-- /wp:buttons -->\n\n";
+}
+
+/**
+ * Raw fseo-btn HTML as currently live on product next-step CTAs.
+ *
+ * @param string $text
+ * @param string $href
+ * @param string $style
+ * @return string
+ */
+function forgedseo_dev_seed_fseo_btn_html($text, $href, $style = 'primary')
+{
+    $modifier = $style === 'secondary' ? 'secondary' : 'primary';
+    return "<!-- wp:html -->\n"
+        . '<a class="fseo-btn fseo-btn--' . $modifier . '" href="' . $href . '">' . $text . "</a>\n"
+        . "<!-- /wp:html -->\n\n";
+}
+
+/**
  * Live homepage headings/copy from forgedseo.com.
  *
  * @return string
@@ -414,8 +465,12 @@ function forgedseo_dev_seed_service_content()
     $out = '';
     $out .= forgedseo_dev_seed_h('Managed Service', 1);
     $out .= forgedseo_dev_seed_p('Consistent authority. Zero overhead. We run ForgedSEO for you — research, content, publishing, and compounding traffic while you stay focused on the product.');
-    $out .= forgedseo_dev_seed_cta('Get started', 'mailto:forgedseo@spenpo.com');
-    $out .= forgedseo_dev_seed_cta('Compare PaaS', '/enterprise/', 'secondary');
+    $out .= forgedseo_dev_seed_core_buttons(
+        array(
+            array('text' => 'Get started', 'href' => '/service/#start'),
+            array('text' => 'Compare PaaS', 'href' => '/enterprise/'),
+        )
+    );
 
     $out .= forgedseo_dev_seed_h('Who it’s for');
     $out .= forgedseo_dev_seed_p('Founders and marketing leads who want SEO outcomes without hiring a full content org — or babysitting freelancers. Best fit when you need a steady publish cadence, brand-aligned voice, and reporting you can hand to leadership.');
@@ -475,7 +530,7 @@ function forgedseo_dev_seed_service_content()
 
     $out .= forgedseo_dev_seed_h('Next step');
     $out .= forgedseo_dev_seed_p('Tell us about your site and goals. We’ll map a first-90-days outline before anything ships.');
-    $out .= forgedseo_dev_seed_cta('Request managed access', 'mailto:forgedseo@spenpo.com');
+    $out .= forgedseo_dev_seed_fseo_btn_html('Request managed access', 'mailto:hello@forgedseo.com');
 
     return $out;
 }
@@ -490,8 +545,12 @@ function forgedseo_dev_seed_enterprise_content()
     $out = '';
     $out .= forgedseo_dev_seed_h('Enterprise PaaS', 1);
     $out .= forgedseo_dev_seed_p('From a single goal to optimized content in minutes. Orchestrate keyword campaigns on ForgedSEO’s agentic engine — automate research, drafting, and publishing without drowning in prompts.');
-    $out .= forgedseo_dev_seed_cta('Request access', 'mailto:forgedseo@spenpo.com');
-    $out .= forgedseo_dev_seed_cta('Prefer managed?', '/service/', 'secondary');
+    $out .= forgedseo_dev_seed_core_buttons(
+        array(
+            array('text' => 'Request access', 'href' => 'mailto:hello@forgedseo.com'),
+            array('text' => 'Prefer managed?', 'href' => '/service/'),
+        )
+    );
 
     $out .= forgedseo_dev_seed_h('Who it’s for');
     $out .= forgedseo_dev_seed_p('Marketing ops, growth, and content teams that need leverage — not another chat window. Best fit when your team already owns strategy and wants the same agentic stack we run for Managed Service clients.');
@@ -554,7 +613,7 @@ function forgedseo_dev_seed_enterprise_content()
 
     $out .= forgedseo_dev_seed_h('Next step');
     $out .= forgedseo_dev_seed_p('Request Enterprise access and we’ll walk through workspace setup, governance, and your first campaign path. Prefer hands-off? See <a href="/service/">Managed Service</a>.');
-    $out .= forgedseo_dev_seed_cta('Request Enterprise access', 'mailto:forgedseo@spenpo.com');
+    $out .= forgedseo_dev_seed_fseo_btn_html('Request Enterprise access', 'mailto:hello@forgedseo.com');
 
     return $out;
 }
