@@ -379,6 +379,8 @@ body.forgedseo-core .has-fira-code-font-family {
   gap: 0.75rem;
   margin-top: 1.35rem;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Direct-child fseo-btn (shortcode output) must be block-level or constrained layout skips it. */
