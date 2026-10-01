@@ -190,6 +190,7 @@ function forgedseo_core_cta_prepare_content($content, $post_id)
     $updated = forgedseo_core_cta_replace_loose_button_blocks($updated, $post_id);
     $updated = forgedseo_core_cta_rewrite_shortcodes($updated, $post_id);
     $updated = forgedseo_core_cta_rewrite_fseo_btn_anchors($updated, $post_id);
+    $updated = forgedseo_core_cta_wrap_orphan_html_buttons($updated);
     $updated = forgedseo_core_cta_rewrite_stale_hrefs($updated);
 
     return is_string($updated) ? $updated : '';
@@ -224,7 +225,7 @@ function forgedseo_core_cta_content_is_migrated($content, $post_id)
         return false;
     }
 
-    if (false === strpos($content, 'fseo-btn') && false === strpos($content, 'forgedseo_cta')) {
+    if (false === strpos($content, 'fseo-cta-row') || false === strpos($content, 'fseo-btn')) {
         return false;
     }
 
@@ -289,9 +290,38 @@ function forgedseo_core_cta_replace_loose_button_blocks($content, $post_id)
             }
 
             $item = $items[0];
-            return forgedseo_core_cta_html_block(
-                forgedseo_core_btn_html($item['text'], $item['href'], $item['style'])
-            );
+            $row = forgedseo_core_cta_row_html(array($item));
+            if ($row === '') {
+                return $match[0];
+            }
+            return forgedseo_core_cta_html_block($row);
+        },
+        $content
+    );
+
+    return is_string($updated) ? $updated : $content;
+}
+
+/**
+ * Keep lone fseo-btn HTML blocks in a block-level row so constrained layout applies.
+ *
+ * @param string $content
+ * @return string
+ */
+function forgedseo_core_cta_wrap_orphan_html_buttons($content)
+{
+    $updated = preg_replace_callback(
+        '/<!--\s+wp:html\s+-->(.*?)<!--\s+\/wp:html\s+-->/s',
+        static function ($match) {
+            $inner = trim($match[1]);
+            if ($inner === '' || false === strpos($inner, 'fseo-btn')) {
+                return $match[0];
+            }
+            if (false !== strpos($inner, 'fseo-cta-row')) {
+                return $match[0];
+            }
+
+            return forgedseo_core_cta_html_block('<div class="fseo-cta-row">' . $inner . '</div>');
         },
         $content
     );
@@ -449,7 +479,7 @@ function forgedseo_core_cta_href_for_style($style, $post_id)
 }
 
 /**
- * Rebuild [forgedseo_cta] atts with canonical href/style.
+ * Rebuild [forgedseo_cta] as an HTML fseo-cta-row (constrained-layout safe).
  *
  * @param string $content
  * @param int    $post_id
@@ -458,7 +488,7 @@ function forgedseo_core_cta_href_for_style($style, $post_id)
 function forgedseo_core_cta_rewrite_shortcodes($content, $post_id)
 {
     $updated = preg_replace_callback(
-        '/\[forgedseo_cta([^\]]*)\]/i',
+        '/(?:<!--\s+wp:shortcode\s+-->\s*)?\[forgedseo_cta([^\]]*)\](?:\s*<!--\s+\/wp:shortcode\s+-->)?/i',
         static function ($match) use ($post_id) {
             $atts = forgedseo_core_cta_parse_shortcode_atts($match[1]);
             $text = isset($atts['text']) ? $atts['text'] : 'Get started';
@@ -466,13 +496,17 @@ function forgedseo_core_cta_rewrite_shortcodes($content, $post_id)
             $hint = isset($atts['style']) ? $atts['style'] : 'primary';
             $style = forgedseo_core_cta_classify($text, $href, $hint, $post_id);
             $href = forgedseo_core_cta_href_for_style($style, $post_id);
-
-            return sprintf(
-                '[forgedseo_cta text="%s" href="%s" style="%s"]',
-                forgedseo_core_cta_shortcode_escape($text),
-                forgedseo_core_cta_shortcode_escape($href),
-                forgedseo_core_cta_shortcode_escape($style)
+            $row = forgedseo_core_cta_row_html(
+                array(
+                    array(
+                        'text'  => $text,
+                        'href'  => $href,
+                        'style' => $style,
+                    ),
+                )
             );
+
+            return $row !== '' ? forgedseo_core_cta_html_block($row) : $match[0];
         },
         $content
     );

@@ -381,6 +381,13 @@ body.forgedseo-core .has-fira-code-font-family {
   align-items: center;
 }
 
+/* Direct-child fseo-btn (shortcode output) must be block-level or constrained layout skips it. */
+body.forgedseo-core .entry-content > .fseo-btn {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+}
+
 /* Cards / columns */
 body.forgedseo-core .wp-block-column,
 .fseo-card {
