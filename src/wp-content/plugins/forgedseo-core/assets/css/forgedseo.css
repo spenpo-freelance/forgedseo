@@ -266,7 +266,7 @@ body.forgedseo-core .fseo-hero-lede {
 }
 
 /* Section rhythm */
-body.forgedseo-core main > .wp-block-group,
+body.forgedseo-core main > .wp-block-group:not(.fseo-s),
 body.forgedseo-core .entry-content > .wp-block-group,
 body.forgedseo-core .fseo-section {
   margin-block: 0;
@@ -493,11 +493,11 @@ body.forgedseo-core .wp-site-blocks > .wp-block-template-part > .wp-block-group 
 }
 
 /* ==========================================================================
-   Home (forgedseo/home pattern, patterns/home-*.php)
+   Section system (includes/sections.php, patterns/*.php)
    ========================================================================== */
 
-body.fseo-home main,
-body.fseo-home main > .wp-block-group.alignfull {
+body.fseo-designed main,
+body.fseo-designed main > .wp-block-group.alignfull:not(.fseo-s) {
   margin-block: 0 !important;
   padding-block: 0 !important;
 }
@@ -711,6 +711,12 @@ body.forgedseo-core .fseo-icon::before {
 .fseo-i-graph { --fseo-icon: url("../img/icons/graph.svg"); }
 .fseo-i-code { --fseo-icon: url("../img/icons/code.svg"); }
 .fseo-i-eye { --fseo-icon: url("../img/icons/eye.svg"); }
+.fseo-i-users { --fseo-icon: url("../img/icons/users.svg"); }
+.fseo-i-building { --fseo-icon: url("../img/icons/building.svg"); }
+.fseo-i-layers { --fseo-icon: url("../img/icons/layers.svg"); }
+.fseo-i-calendar { --fseo-icon: url("../img/icons/calendar.svg"); }
+.fseo-i-chart { --fseo-icon: url("../img/icons/chart.svg"); }
+.fseo-i-shield { --fseo-icon: url("../img/icons/shield.svg"); }
 
 /* Hero */
 body.forgedseo-core .fseo-hero2 {
@@ -832,7 +838,7 @@ body.forgedseo-core .fseo-proof {
   border-top: 1px solid var(--fseo-line-dark);
 }
 
-body.forgedseo-core .fseo-proof .fseo-wrap {
+body.forgedseo-core .fseo-s.fseo-proof > .fseo-wrap {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
@@ -885,10 +891,8 @@ body.forgedseo-core .fseo-s .fseo-stat__label {
   }
 }
 
-/* Pipeline */
-body.forgedseo-core .fseo-pipeline .fseo-wrap,
-body.forgedseo-core .fseo-why .fseo-wrap,
-body.forgedseo-core .fseo-plans .fseo-wrap {
+/* Stacked bands: head above content */
+body.forgedseo-core .fseo-s > .fseo-wrap:where(:not([class*="__grid"]):not(.fseo-split)) {
   display: flex;
   flex-direction: column;
   gap: clamp(2.5rem, 4vw, 4rem);
@@ -1245,4 +1249,552 @@ body.forgedseo-core .fseo-form-card .wpforms-confirmation-container-full {
 body.forgedseo-core .fseo-form-card label.wpforms-error,
 body.forgedseo-core .fseo-form-card em.wpforms-error {
   color: var(--fseo-ember-soft) !important;
+}
+
+/* Paper hero with a price card (Managed Service) */
+body.forgedseo-core .fseo-hero2--page {
+  padding-block: clamp(3rem, 2rem + 5vw, 6.5rem) clamp(3.5rem, 2rem + 5vw, 7rem);
+}
+
+body.forgedseo-core .fseo-hero2.fseo-s--paper {
+  background:
+    radial-gradient(48rem 32rem at 100% 0%, rgba(var(--fseo-glow), 0.08), transparent 60%),
+    var(--fseo-paper);
+}
+
+body.forgedseo-core .fseo-price-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: clamp(1.75rem, 1rem + 2.5vw, 2.5rem);
+  border: 1px solid var(--fseo-line-dark);
+  border-radius: var(--fseo-radius-lg);
+  background:
+    radial-gradient(32rem 24rem at 100% 0%, rgba(var(--fseo-glow), 0.22), transparent 65%),
+    var(--fseo-charcoal-deep);
+  color: var(--fseo-on-dark-muted);
+  box-shadow: 0 30px 60px -20px rgba(22, 22, 24, 0.35);
+}
+
+body.forgedseo-core .fseo-s .fseo-price-card .fseo-kicker {
+  color: var(--fseo-ember-hot);
+}
+
+body.forgedseo-core .fseo-s .fseo-price-card .fseo-price {
+  margin-top: 0;
+  color: var(--fseo-on-dark-muted);
+}
+
+body.forgedseo-core .fseo-s .fseo-price-card .fseo-price strong {
+  font-size: clamp(3rem, 2rem + 2.4vw, 4rem);
+  color: var(--fseo-white);
+}
+
+body.forgedseo-core .fseo-s .fseo-price-card__sub {
+  margin-top: -0.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--fseo-line-dark);
+}
+
+body.forgedseo-core .fseo-price-card .fseo-checks li {
+  color: var(--fseo-paper);
+}
+
+body.forgedseo-core .fseo-price-card .fseo-checks li::before {
+  background-color: var(--fseo-ember-hot);
+}
+
+body.forgedseo-core .fseo-s .fseo-price-card .fseo-fineprint {
+  color: var(--fseo-steel-500);
+}
+
+@media (min-width: 1000px) {
+  body.forgedseo-core .fseo-hero2__grid:has(.fseo-price-card) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 32rem);
+    justify-content: space-between;
+    gap: 5rem;
+  }
+}
+
+/* Dark bands: masthead, CTA band, post header */
+body.forgedseo-core .fseo-masthead,
+body.forgedseo-core .fseo-cta-band,
+body.forgedseo-core .fseo-post-head {
+  background:
+    radial-gradient(56rem 36rem at 12% 0%, rgba(var(--fseo-glow), 0.18), transparent 60%),
+    var(--fseo-charcoal-deep);
+}
+
+body.forgedseo-core .fseo-masthead {
+  padding-block: clamp(4rem, 2.5rem + 5vw, 6.5rem);
+}
+
+body.forgedseo-core .fseo-s.fseo-masthead > .fseo-wrap {
+  gap: 1.5rem;
+}
+
+body.forgedseo-core .fseo-masthead .fseo-lede {
+  max-width: 40rem;
+}
+
+body.forgedseo-core .fseo-masthead--compact {
+  padding-block: clamp(3rem, 2rem + 4vw, 5rem);
+}
+
+body.forgedseo-core .fseo-masthead--404 {
+  display: flex;
+  align-items: center;
+  min-height: min(70vh, 44rem);
+}
+
+body.forgedseo-core .fseo-masthead .fseo-ctas {
+  margin-top: 0.5rem;
+}
+
+body.forgedseo-core .fseo-s .fseo-display--m {
+  font-size: clamp(2rem, 1.4rem + 2vw, 3.25rem);
+  line-height: 1.08;
+}
+
+body.forgedseo-core .fseo-cta-band {
+  padding-block: clamp(3.5rem, 2rem + 4vw, 5.5rem);
+}
+
+body.forgedseo-core .fseo-cta-band__grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+body.forgedseo-core .fseo-cta-band__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  max-width: 40rem;
+}
+
+/* Ownership: light and dark panels on a dark band */
+body.forgedseo-core .fseo-s--dark .fseo-panel:not(.fseo-panel--dark) {
+  color: var(--fseo-muted);
+}
+
+body.forgedseo-core .fseo-s--dark .fseo-panel:not(.fseo-panel--dark) .fseo-kicker {
+  color: var(--fseo-ember-ink);
+}
+
+body.forgedseo-core .fseo-s--dark .fseo-panel:not(.fseo-panel--dark) :is(h2, h3) {
+  color: var(--fseo-ink);
+}
+
+body.forgedseo-core .fseo-ownership .fseo-panel--dark {
+  border-color: var(--fseo-line-dark);
+}
+
+/* About story */
+body.forgedseo-core .fseo-story__grid,
+body.forgedseo-core .fseo-faq__grid {
+  display: grid;
+  gap: clamp(2rem, 5vw, 5.5rem);
+  align-items: start;
+}
+
+@media (min-width: 1000px) {
+  body.forgedseo-core .fseo-story__grid,
+  body.forgedseo-core .fseo-faq__grid {
+    grid-template-columns: minmax(0, 25rem) minmax(0, 1fr);
+  }
+
+  body.forgedseo-core .fseo-faq__grid > .fseo-head {
+    position: sticky;
+    top: calc(var(--fseo-header-height) + 2rem);
+  }
+}
+
+body.forgedseo-core .fseo-s .fseo-story .fseo-prose p,
+body.forgedseo-core .fseo-s.fseo-story .fseo-prose p {
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.7;
+}
+
+body.forgedseo-core .fseo-reasons--3 {
+  gap: 2.5rem 3rem;
+}
+
+@media (min-width: 900px) {
+  body.forgedseo-core .fseo-reasons.fseo-reasons--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+body.forgedseo-core .fseo-s--dark + .fseo-plans {
+  padding-top: var(--fseo-band-space);
+}
+
+/* FAQ */
+body.forgedseo-core .fseo-faq__list {
+  border-bottom: 1px solid var(--fseo-line);
+}
+
+body.forgedseo-core .fseo-faq__item {
+  margin: 0;
+  padding-block: 1.5rem;
+  border-top: 1px solid var(--fseo-line);
+}
+
+body.forgedseo-core .fseo-faq__item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--fseo-font-display);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--fseo-ink);
+}
+
+body.forgedseo-core .fseo-faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+body.forgedseo-core .fseo-faq__item summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: 1.375rem;
+  height: 1.375rem;
+  background-color: var(--fseo-ember-deep);
+  -webkit-mask: url("../img/icons/plus.svg") center / contain no-repeat;
+  mask: url("../img/icons/plus.svg") center / contain no-repeat;
+  transition: transform 200ms ease;
+}
+
+body.forgedseo-core .fseo-faq__item[open] summary::after {
+  transform: rotate(45deg);
+}
+
+body.forgedseo-core .fseo-faq__item summary:focus-visible {
+  outline: 2px solid var(--fseo-ember-ink);
+  outline-offset: 4px;
+}
+
+body.forgedseo-core .fseo-s .fseo-faq__item p {
+  max-width: 42rem;
+  margin-top: 0.75rem;
+}
+
+/* Prose: legal pages and post content */
+body.forgedseo-core .fseo-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 45rem;
+  color: var(--fseo-muted);
+}
+
+body.forgedseo-core .fseo-prose > * {
+  margin-block: 0;
+}
+
+body.forgedseo-core .fseo-s .fseo-prose h2 {
+  margin-top: 1.25rem;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  line-height: 1.2;
+}
+
+body.forgedseo-core .fseo-s .fseo-prose h3 {
+  margin-top: 0.75rem;
+  font-size: 1.25rem;
+}
+
+body.forgedseo-core .fseo-prose :is(ul, ol) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding-left: 1.25rem;
+}
+
+body.forgedseo-core .fseo-prose li {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+body.forgedseo-core .fseo-prose li strong {
+  color: var(--fseo-ink);
+}
+
+body.forgedseo-core .fseo-prose blockquote {
+  margin: 0;
+  padding: 0.25rem 0 0.25rem 1.5rem;
+  border-left: 3px solid var(--fseo-ember);
+  font-family: var(--fseo-font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--fseo-ink);
+}
+
+body.forgedseo-core .fseo-prose img {
+  border-radius: var(--fseo-radius);
+}
+
+/* Blog cards */
+body.forgedseo-core .fseo-posts {
+  padding-top: clamp(3.5rem, 2rem + 4vw, 6rem);
+}
+
+body.forgedseo-core .fseo-cards {
+  display: grid;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body.forgedseo-core .fseo-cards > li {
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  body.forgedseo-core .fseo-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1000px) {
+  body.forgedseo-core .fseo-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3rem;
+  }
+}
+
+body.forgedseo-core .fseo-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--fseo-line);
+  border-radius: var(--fseo-radius-lg);
+  background: var(--fseo-white);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+body.forgedseo-core .fseo-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px -18px rgba(22, 22, 24, 0.25);
+}
+
+body.forgedseo-core .fseo-card__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background:
+    url("../img/forgedseo-mark.svg") center / auto 32% no-repeat,
+    radial-gradient(28rem 18rem at 20% 10%, rgba(var(--fseo-glow), 0.35), transparent 65%),
+    var(--fseo-charcoal);
+}
+
+body.forgedseo-core .fseo-card__media .wp-block-post-featured-image {
+  height: 100%;
+  margin: 0;
+}
+
+body.forgedseo-core .fseo-card__media .wp-block-post-featured-image :is(a, img) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+body.forgedseo-core .fseo-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem 1.5rem 1.75rem;
+}
+
+body.forgedseo-core .fseo-s .fseo-kicker a {
+  color: inherit;
+  text-decoration: none;
+}
+
+body.forgedseo-core .fseo-card .wp-block-post-title a {
+  color: var(--fseo-ink);
+  text-decoration: none;
+}
+
+body.forgedseo-core .fseo-card .wp-block-post-title a:hover {
+  color: var(--fseo-ember-ink);
+}
+
+body.forgedseo-core .fseo-s .fseo-card__excerpt p {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+body.forgedseo-core .fseo-card__date {
+  margin-top: auto;
+  font-size: 0.875rem;
+  color: var(--fseo-steel-500);
+}
+
+body.forgedseo-core .fseo-pagination {
+  margin-top: 3rem;
+}
+
+body.forgedseo-core .fseo-pagination a {
+  display: inline-flex;
+  padding: 0.75rem 1.4rem;
+  border: 1px solid var(--fseo-ink);
+  border-radius: 999px;
+  color: var(--fseo-ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+body.forgedseo-core .fseo-pagination a:hover {
+  background: var(--fseo-charcoal);
+  color: var(--fseo-paper);
+}
+
+body.forgedseo-core .fseo-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 44rem;
+  padding: clamp(1.75rem, 1rem + 2.5vw, 3rem);
+  border: 1px dashed var(--fseo-line);
+  border-radius: var(--fseo-radius-lg);
+  background: var(--fseo-white);
+}
+
+/* Single post */
+body.forgedseo-core .fseo-post-head {
+  padding-block: clamp(3.5rem, 2rem + 5vw, 6rem) clamp(3rem, 2rem + 4vw, 4.5rem);
+}
+
+body.forgedseo-core .fseo-s.fseo-post-head > .fseo-wrap {
+  align-items: center;
+  gap: 1.375rem;
+  text-align: center;
+}
+
+body.forgedseo-core .fseo-post-head .wp-block-post-title {
+  max-width: 56rem;
+}
+
+body.forgedseo-core .fseo-post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--fseo-on-dark-muted);
+  font-size: 0.9375rem;
+}
+
+body.forgedseo-core .fseo-post-meta > * {
+  margin: 0;
+}
+
+body.forgedseo-core .fseo-post-meta > * + *::before {
+  content: "·";
+  margin-right: 0.75rem;
+}
+
+body.forgedseo-core .fseo-post-feature {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(var(--fseo-charcoal-deep) 50%, var(--fseo-paper) 50%);
+}
+
+body.forgedseo-core .fseo-post-feature:not(:has(img)) {
+  display: none;
+}
+
+body.forgedseo-core .fseo-post-feature__img {
+  max-width: 65rem;
+  margin: 0 auto;
+}
+
+body.forgedseo-core .fseo-post-feature__img img {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  border: 1px solid var(--fseo-line-dark);
+  border-radius: var(--fseo-radius-lg);
+}
+
+body.forgedseo-core .fseo-post-body {
+  padding-top: clamp(3rem, 2rem + 3vw, 4.5rem);
+}
+
+body.forgedseo-core .fseo-s.fseo-post-body > .fseo-wrap {
+  align-items: center;
+}
+
+body.forgedseo-core .fseo-post-body .fseo-prose,
+body.forgedseo-core .fseo-end-cta {
+  width: 100%;
+  max-width: 45rem;
+}
+
+body.forgedseo-core .fseo-s .fseo-post-body .fseo-prose p,
+body.forgedseo-core .fseo-s.fseo-post-body .fseo-prose p {
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.75;
+}
+
+body.forgedseo-core .fseo-end-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 2rem;
+  padding: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+  border: 1px solid var(--fseo-line-dark);
+  border-radius: var(--fseo-radius-lg);
+  background:
+    radial-gradient(28rem 18rem at 0% 0%, rgba(var(--fseo-glow), 0.2), transparent 65%),
+    var(--fseo-charcoal-deep);
+  color: var(--fseo-on-dark-muted);
+}
+
+body.forgedseo-core .fseo-end-cta__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+body.forgedseo-core .fseo-s--paper .fseo-end-cta .fseo-h3 {
+  color: var(--fseo-white);
+}
+
+body.forgedseo-core .fseo-s .fseo-end-cta p {
+  font-size: 1rem;
+}
+
+body.forgedseo-core .fseo-s--paper + .fseo-more {
+  padding-top: var(--fseo-band-space);
+}
+
+body.forgedseo-core .fseo-more {
+  background: var(--fseo-paper-200);
+}
+
+body.forgedseo-core .fseo-more:not(:has(.wp-block-post)) {
+  display: none;
+}
+
+/* Footer legal links (includes/brand.php) */
+body.forgedseo-core footer .fseo-legal-links a,
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part:last-child .fseo-legal-links a {
+  color: var(--fseo-on-dark-muted);
+  text-decoration: none;
+}
+
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part:last-child .fseo-legal-links a:hover {
+  color: var(--fseo-ember-hot);
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Vector lockup for core/site-logo and the header trial CTA.
+ * Vector lockup for core/site-logo, the header trial CTA, and footer legal links.
  *
  * Both are render-time filters, so no SVG upload or template-part rewrite is
  * needed. The Custom Logo attachment (see chrome.php) stays in place for
@@ -13,6 +13,7 @@ if (!defined('ABSPATH')) {
 
 add_filter('render_block_core/site-logo', 'forgedseo_core_brand_site_logo', 10, 2);
 add_filter('render_block_core/navigation', 'forgedseo_core_brand_header_cta', 10, 2);
+add_filter('render_block_core/paragraph', 'forgedseo_core_brand_footer_links', 10, 2);
 
 /**
  * viewBox width / height of assets/img/forgedseo-lockup.svg.
@@ -87,4 +88,36 @@ function forgedseo_core_brand_header_cta($html, $block)
         esc_url(forgedseo_core_trial_url()),
         esc_html__('Start free trial', 'forgedseo-core')
     );
+}
+
+/**
+ * Add About and legal links to the footer copyright line.
+ *
+ * @param string               $html
+ * @param array<string, mixed> $block
+ * @return string
+ */
+function forgedseo_core_brand_footer_links($html, $block)
+{
+    if (!is_string($html) || strpos($html, '© ForgedSEO') === false || strpos($html, 'fseo-legal-links') !== false) {
+        return $html;
+    }
+
+    $links = array(
+        '/about/'          => __('About', 'forgedseo-core'),
+        '/privacy-policy/' => __('Privacy', 'forgedseo-core'),
+        '/terms/'          => __('Terms', 'forgedseo-core'),
+    );
+
+    $out = '';
+    foreach ($links as $path => $label) {
+        $out .= ' · <a href="' . esc_url(home_url($path)) . '">' . esc_html($label) . '</a>';
+    }
+
+    $pos = strrpos($html, '</p>');
+    if ($pos === false) {
+        return $html;
+    }
+
+    return substr($html, 0, $pos) . '<span class="fseo-legal-links">' . $out . '</span>' . substr($html, $pos);
 }
