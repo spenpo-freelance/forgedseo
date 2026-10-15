@@ -51,17 +51,20 @@ function forgedseo_core_enqueue()
  */
 function forgedseo_core_unused_site_kit_handles()
 {
-    return array(
-        'googlesitekit-events-provider-wpforms',
-        'googlesitekit-events-provider-content-events',
-    );
+    $handles = array('googlesitekit-events-provider-content-events');
+    if (!is_front_page()) {
+        $handles[] = 'googlesitekit-events-provider-wpforms';
+    }
+
+    return $handles;
 }
 
 /**
  * Drop unused Site Kit event-provider JS after Site Kit enqueues (priority 30).
  *
- * Leaves googlesitekit-gtag / Analytics base (GT-5DCPNJTF) in place. Marketing
- * pages have no WPForms, and the content-events provider is unused weight.
+ * Leaves googlesitekit-gtag / Analytics base (GT-5DCPNJTF) in place. Only Home
+ * embeds WPForms (#contact), so the WPForms provider stays there for lead
+ * events; the content-events provider is unused weight everywhere.
  */
 function forgedseo_core_dequeue_unused_site_kit()
 {

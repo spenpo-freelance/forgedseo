@@ -15,25 +15,49 @@
   src: url("../fonts/InterVariable-Italic.woff2") format("woff2");
 }
 
+/* Montserrat (SIL OFL 1.1, latin subset) — display face matching the wordmark; see ../fonts/OFL-Montserrat.txt */
+@font-face {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("../fonts/MontserratVariable-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Tokens mirror the Penpot "Website Design" Foundations page. */
 :root {
-  --fseo-charcoal: #141416;
-  --fseo-charcoal-deep: #0c0c0e;
-  --fseo-steel: #2a2a30;
-  --fseo-ember: #e89b3c;
-  --fseo-ember-hot: #f3b15a;
-  --fseo-ember-deep: #c47a22;
-  --fseo-paper: #f6f3ec;
+  --fseo-charcoal: #18181a;
+  --fseo-charcoal-deep: #0e0e10;
+  --fseo-charcoal-800: #222225;
+  --fseo-steel: #2e2e33;
+  --fseo-steel-500: #5a5a62;
+  --fseo-ember: #e2703a;
+  --fseo-ember-hot: #f2814a;
+  --fseo-ember-soft: #f4a56e;
+  --fseo-ember-deep: #c2552a;
+  --fseo-ember-ink: #a8461f;
+  --fseo-glow: 255, 90, 31;
+  --fseo-paper: #f7f4ee;
+  --fseo-paper-200: #ede8de;
   --fseo-white: #ffffff;
   --fseo-ink: #161618;
   --fseo-muted: #5c5b57;
-  --fseo-line: rgba(20, 20, 22, 0.12);
+  --fseo-on-dark: #f7f4ee;
+  --fseo-on-dark-muted: #b4b1aa;
+  --fseo-line: #ddd7cb;
+  --fseo-line-dark: #34343a;
   --fseo-radius: 14px;
   --fseo-radius-sm: 10px;
+  --fseo-radius-lg: 20px;
   --fseo-shadow: 0 12px 32px rgba(12, 12, 14, 0.08);
   --fseo-font-body: Inter, system-ui, sans-serif;
-  --fseo-font-display: Inter, system-ui, sans-serif;
+  --fseo-font-display: Montserrat, Inter, system-ui, sans-serif;
   --fseo-header-height: 4.25rem;
   --fseo-section-space: clamp(3.5rem, 6vw, 5.5rem);
+  --fseo-band-space: clamp(4.5rem, 3rem + 5vw, 8rem);
+  --fseo-wrap: 78rem;
+  --fseo-gutter: clamp(1.5rem, 5vw, 6rem);
 }
 
 body.forgedseo-core {
@@ -58,12 +82,12 @@ body.forgedseo-core .wp-block-site-title,
 body.forgedseo-core .wp-block-post-title {
   font-family: var(--fseo-font-display);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: var(--fseo-charcoal-deep);
 }
 
 body.forgedseo-core a:where(:not(.wp-element-button):not(.fseo-btn):not(.wp-block-button__link)) {
-  color: var(--fseo-ember-deep);
+  color: var(--fseo-ember-ink);
 }
 
 body.forgedseo-core a:where(:not(.wp-element-button):not(.fseo-btn):not(.wp-block-button__link)):hover {
@@ -91,30 +115,28 @@ body.admin-bar.forgedseo-core header.wp-block-template-part {
 /* Header / nav — Twenty Twenty-Five template parts */
 body.forgedseo-core .wp-site-blocks > header,
 body.forgedseo-core header.wp-block-template-part,
-body.forgedseo-core .wp-site-blocks > .wp-block-template-part:first-of-type {
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part:first-child {
   position: sticky;
   top: 0;
   z-index: 200;
-  background: rgba(20, 20, 22, 0.94);
+  background: var(--fseo-charcoal-deep);
   color: var(--fseo-paper);
   /* TT5 overlay uses has-contrast-color / has-base-background-color with !important.
      Remap those presets so charcoal header, links, and overlay stay readable. */
   --wp--preset--color--contrast: var(--fseo-paper);
   --wp--preset--color--base: var(--fseo-charcoal);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(232, 155, 60, 0.22);
+  border-bottom: 1px solid var(--fseo-line-dark);
   transition: box-shadow 200ms ease, background-color 200ms ease;
 }
 
 body.forgedseo-core .wp-site-blocks > header.is-scrolled,
 body.forgedseo-core header.wp-block-template-part.is-scrolled,
-body.forgedseo-core .wp-site-blocks > .wp-block-template-part:first-of-type.is-scrolled {
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part:first-child.is-scrolled {
   box-shadow: 0 10px 28px rgba(12, 12, 14, 0.28);
 }
 
 body.forgedseo-core header .wp-block-group,
-body.forgedseo-core .wp-site-blocks > .wp-block-template-part:first-of-type .wp-block-group {
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part:first-child .wp-block-group {
   padding-top: 0.85rem;
   padding-bottom: 0.85rem;
 }
@@ -135,8 +157,8 @@ body.forgedseo-core .wp-block-site-title a:hover {
 
 body.forgedseo-core header .wp-block-site-logo,
 body.forgedseo-core footer .wp-block-site-logo,
-body.forgedseo-core .wp-site-blocks > .wp-block-template-part:first-of-type .wp-block-site-logo,
-body.forgedseo-core .wp-site-blocks > .wp-block-template-part:last-of-type .wp-block-site-logo {
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part:first-child .wp-block-site-logo,
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part:last-child .wp-block-site-logo {
   line-height: 0;
 }
 
@@ -183,7 +205,7 @@ body.forgedseo-core .wp-block-navigation__responsive-container.is-menu-open {
 
 body.forgedseo-core .wp-block-navigation__submenu-container {
   background: var(--fseo-steel) !important;
-  border: 1px solid rgba(232, 155, 60, 0.2) !important;
+  border: 1px solid var(--fseo-line-dark) !important;
   border-radius: var(--fseo-radius-sm);
   box-shadow: var(--fseo-shadow);
 }
@@ -197,7 +219,7 @@ body.forgedseo-core .fseo-hero {
 
 body.forgedseo-core .wp-block-cover:not(.has-background-dim) {
   background-image:
-    radial-gradient(ellipse at 20% 20%, rgba(232, 155, 60, 0.22), transparent 52%),
+    radial-gradient(ellipse at 20% 20%, rgba(var(--fseo-glow), 0.2), transparent 52%),
     linear-gradient(180deg, var(--fseo-charcoal) 0%, var(--fseo-charcoal-deep) 100%);
 }
 
@@ -228,7 +250,7 @@ body.forgedseo-core .fseo-hero-lede {
   box-sizing: border-box;
   padding: calc(var(--fseo-header-height) + 2.5rem) 1.5rem 4rem;
   background:
-    radial-gradient(ellipse at 18% 12%, rgba(232, 155, 60, 0.24), transparent 48%),
+    radial-gradient(ellipse at 18% 12%, rgba(var(--fseo-glow), 0.22), transparent 48%),
     linear-gradient(165deg, var(--fseo-charcoal) 0%, var(--fseo-charcoal-deep) 100%);
   color: var(--fseo-white);
 }
@@ -236,7 +258,7 @@ body.forgedseo-core .fseo-hero-lede {
 .fseo-kicker {
   display: inline-block;
   margin: 0 0 0.85rem;
-  color: var(--fseo-ember);
+  color: var(--fseo-ember-ink);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -270,9 +292,9 @@ body.forgedseo-core .fseo-section-title {
   color: var(--fseo-paper);
 }
 
-.fseo-section--dark h2,
-.fseo-section--dark h3,
-.fseo-section--dark .wp-block-heading {
+body.forgedseo-core .fseo-section--dark h2,
+body.forgedseo-core .fseo-section--dark h3,
+body.forgedseo-core .fseo-section--dark .wp-block-heading {
   color: var(--fseo-white);
 }
 
@@ -377,15 +399,15 @@ body.forgedseo-core .wp-block-quote {
 /* Footer */
 body.forgedseo-core .wp-site-blocks > footer,
 body.forgedseo-core footer.wp-block-template-part,
-body.forgedseo-core .wp-site-blocks > .wp-block-template-part:last-of-type {
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part:last-child {
   margin-top: auto;
   background: var(--fseo-charcoal-deep);
   color: rgba(246, 243, 236, 0.78);
-  border-top: 1px solid rgba(232, 155, 60, 0.18);
+  border-top: 1px solid var(--fseo-line-dark);
 }
 
 body.forgedseo-core footer a,
-body.forgedseo-core .wp-site-blocks > .wp-block-template-part:last-of-type a {
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part:last-child a {
   color: var(--fseo-ember);
 }
 
@@ -437,4 +459,790 @@ body.forgedseo-core .hostinger-ai-page-title {
   color: var(--fseo-charcoal-deep);
   font-weight: 700;
   letter-spacing: -0.03em;
+}
+
+/* Header trial CTA (includes/brand.php) */
+body.forgedseo-core .fseo-header-cta {
+  flex-shrink: 0;
+  margin-left: 1.25rem;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  body.forgedseo-core .fseo-header-cta {
+    display: none;
+  }
+}
+
+/* Footer chrome */
+body.forgedseo-core .wp-site-blocks > footer .wp-block-site-tagline,
+body.forgedseo-core footer.wp-block-template-part .wp-block-site-tagline {
+  color: var(--fseo-on-dark-muted);
+  font-size: 0.9rem;
+}
+
+body.forgedseo-core footer.wp-block-template-part .has-small-font-size {
+  color: var(--fseo-on-dark-muted);
+}
+
+/* Header and footer rows share the Home section wrap width. */
+body.forgedseo-core .wp-site-blocks > .wp-block-template-part > .wp-block-group .alignwide {
+  max-width: var(--fseo-wrap) !important;
+}
+
+/* ==========================================================================
+   Home (forgedseo/home pattern, patterns/home-*.php)
+   ========================================================================== */
+
+body.fseo-home main,
+body.fseo-home main > .wp-block-group.alignfull {
+  margin-block: 0 !important;
+  padding-block: 0 !important;
+}
+
+body.forgedseo-core .entry-content > .fseo-s,
+body.forgedseo-core .fseo-s {
+  margin-block: 0;
+  padding-block: var(--fseo-band-space);
+  padding-inline: 0;
+}
+
+.fseo-s--paper {
+  background: var(--fseo-paper);
+  color: var(--fseo-muted);
+}
+
+.fseo-s--dark {
+  background: var(--fseo-charcoal-deep);
+  color: var(--fseo-on-dark-muted);
+}
+
+body.forgedseo-core .fseo-s--paper + .fseo-s--paper {
+  padding-top: 0;
+}
+
+body.forgedseo-core .fseo-wrap {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--fseo-wrap) + 2 * var(--fseo-gutter));
+  margin-inline: auto;
+  padding-inline: var(--fseo-gutter);
+}
+
+/* Spacing inside sections is owned by gap, not flow-layout margins. */
+body.forgedseo-core .fseo-s :where(.wp-block-group, .wp-block-buttons, .wp-block-image, .wp-block-heading, p, ul) {
+  margin-block: 0;
+}
+
+body.forgedseo-core .fseo-s p {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+/* Type */
+body.forgedseo-core .fseo-s .fseo-kicker {
+  display: block;
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fseo-ember-ink);
+}
+
+body.forgedseo-core .fseo-s--dark .fseo-kicker,
+body.forgedseo-core .fseo-panel--dark .fseo-kicker {
+  color: var(--fseo-ember-hot);
+}
+
+body.forgedseo-core .fseo-s .fseo-display {
+  font-size: clamp(2.625rem, 1.3rem + 4.2vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+}
+
+body.forgedseo-core .fseo-s .fseo-display--l {
+  font-size: clamp(2.125rem, 1.3rem + 2.6vw, 3.5rem);
+  line-height: 1.06;
+}
+
+body.forgedseo-core .fseo-s .fseo-h2 {
+  font-size: clamp(2rem, 1.35rem + 2vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+body.forgedseo-core .fseo-s .fseo-h3 {
+  font-size: clamp(1.25rem, 1.1rem + 0.4vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+body.forgedseo-core .fseo-s--paper :is(h1, h2, h3) {
+  color: var(--fseo-ink);
+}
+
+body.forgedseo-core .fseo-s--dark :is(h1, h2, h3),
+body.forgedseo-core .fseo-panel--dark :is(h1, h2, h3) {
+  color: var(--fseo-white);
+}
+
+body.forgedseo-core .fseo-s .fseo-lede {
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.6;
+}
+
+body.forgedseo-core .fseo-s .fseo-fineprint {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--fseo-muted);
+}
+
+body.forgedseo-core .fseo-s--dark .fseo-fineprint,
+body.forgedseo-core .fseo-panel--dark .fseo-fineprint {
+  color: var(--fseo-steel-500);
+}
+
+body.forgedseo-core .fseo-s--dark a:where(:not(.wp-element-button):not(.fseo-btn)),
+body.forgedseo-core .fseo-panel--dark a:where(:not(.wp-element-button):not(.fseo-btn)) {
+  color: var(--fseo-ember-hot);
+}
+
+body.forgedseo-core .fseo-s--dark a:where(:not(.wp-element-button):not(.fseo-btn)):hover,
+body.forgedseo-core .fseo-panel--dark a:where(:not(.wp-element-button):not(.fseo-btn)):hover {
+  color: var(--fseo-ember-soft);
+}
+
+.fseo-head {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  max-width: 47.5rem;
+}
+
+/* Buttons inside bands */
+body.forgedseo-core .fseo-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+}
+
+body.forgedseo-core .fseo-s .wp-block-button__link {
+  padding: 0.95rem 1.65rem;
+  font-size: 1rem;
+}
+
+body.forgedseo-core .fseo-s--dark .is-style-outline .wp-block-button__link,
+body.forgedseo-core .fseo-panel--dark .is-style-outline .wp-block-button__link {
+  color: var(--fseo-paper) !important;
+  border-color: var(--fseo-steel-500) !important;
+}
+
+body.forgedseo-core .fseo-s--dark .is-style-outline .wp-block-button__link:hover,
+body.forgedseo-core .fseo-panel--dark .is-style-outline .wp-block-button__link:hover {
+  border-color: var(--fseo-ember-hot) !important;
+  color: var(--fseo-white) !important;
+}
+
+body.forgedseo-core .fseo-s--paper .is-style-outline .wp-block-button__link:hover {
+  background: var(--fseo-charcoal) !important;
+  color: var(--fseo-paper) !important;
+}
+
+/* Icons: mask-image so color follows currentColor */
+.fseo-tile,
+.fseo-icon {
+  --fseo-icon: url("../img/icons/search.svg");
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+
+.fseo-tile::before,
+.fseo-icon::before {
+  content: "";
+  display: block;
+  width: 1.625rem;
+  height: 1.625rem;
+  background-color: currentColor;
+  -webkit-mask: var(--fseo-icon) center / contain no-repeat;
+  mask: var(--fseo-icon) center / contain no-repeat;
+}
+
+body.forgedseo-core .fseo-tile {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--fseo-radius);
+  background: var(--fseo-white);
+  border: 1px solid var(--fseo-line);
+  color: var(--fseo-ember-deep);
+}
+
+body.forgedseo-core .fseo-s--dark .fseo-tile {
+  background: var(--fseo-charcoal-800);
+  border-color: var(--fseo-line-dark);
+  color: var(--fseo-ember-hot);
+}
+
+body.forgedseo-core .fseo-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: start;
+  color: var(--fseo-ember-deep);
+}
+
+body.forgedseo-core .fseo-icon::before {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.fseo-i-search { --fseo-icon: url("../img/icons/search.svg"); }
+.fseo-i-blueprint { --fseo-icon: url("../img/icons/blueprint.svg"); }
+.fseo-i-image { --fseo-icon: url("../img/icons/image.svg"); }
+.fseo-i-publish { --fseo-icon: url("../img/icons/publish.svg"); }
+.fseo-i-database { --fseo-icon: url("../img/icons/database.svg"); }
+.fseo-i-cluster { --fseo-icon: url("../img/icons/cluster.svg"); }
+.fseo-i-terminal { --fseo-icon: url("../img/icons/terminal.svg"); }
+.fseo-i-graph { --fseo-icon: url("../img/icons/graph.svg"); }
+.fseo-i-code { --fseo-icon: url("../img/icons/code.svg"); }
+.fseo-i-eye { --fseo-icon: url("../img/icons/eye.svg"); }
+
+/* Hero */
+body.forgedseo-core .fseo-hero2 {
+  padding-block: clamp(3.5rem, 2rem + 6vw, 7rem) clamp(4rem, 2rem + 6vw, 8rem);
+  background:
+    radial-gradient(60rem 40rem at 12% 0%, rgba(var(--fseo-glow), 0.2), transparent 60%),
+    var(--fseo-charcoal-deep);
+  overflow: hidden;
+}
+
+body.forgedseo-core .fseo-hero2__grid {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.fseo-hero2__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+body.forgedseo-core .fseo-hero2__copy .fseo-lede {
+  max-width: 35rem;
+}
+
+body.forgedseo-core .fseo-hero2__copy .fseo-ctas {
+  margin-top: 0.5rem;
+}
+
+body.forgedseo-core .fseo-window {
+  position: relative;
+  border: 1px solid var(--fseo-line-dark);
+  border-radius: 1rem;
+  background: var(--fseo-charcoal);
+  overflow: hidden;
+  box-shadow:
+    0 30px 80px -10px rgba(var(--fseo-glow), 0.22),
+    0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+body.forgedseo-core .fseo-window__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding: 0 1.125rem;
+  background: var(--fseo-charcoal-800);
+  color: var(--fseo-steel-500);
+  font-size: 0.875rem;
+}
+
+body.forgedseo-core .fseo-window__bar::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  margin-right: 2.25rem;
+  border-radius: 50%;
+  background: #3a3a40;
+  box-shadow: 18px 0 0 #3a3a40, 36px 0 0 #3a3a40;
+}
+
+body.forgedseo-core .fseo-window__shot,
+body.forgedseo-core .fseo-window__shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 816 / 322;
+  margin: 0;
+}
+
+body.forgedseo-core .fseo-window__status {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.125rem;
+  background: var(--fseo-charcoal-800);
+  color: var(--fseo-on-dark-muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+body.forgedseo-core .fseo-window__status::before {
+  content: "";
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--fseo-ember-hot);
+  box-shadow: 0 0 0 4px rgba(var(--fseo-glow), 0.18);
+}
+
+@media (min-width: 1000px) {
+  body.forgedseo-core .fseo-hero2__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  }
+}
+
+@media (max-width: 599px) {
+  body.forgedseo-core .fseo-hero2 .fseo-ctas {
+    flex-direction: column;
+  }
+
+  body.forgedseo-core .fseo-hero2 .fseo-ctas .wp-block-button,
+  body.forgedseo-core .fseo-hero2 .fseo-ctas .wp-block-button__link {
+    width: 100%;
+    text-align: center;
+  }
+
+  body.forgedseo-core .fseo-window__status {
+    display: none;
+  }
+}
+
+/* Proof strip */
+body.forgedseo-core .fseo-proof {
+  padding-block: clamp(3rem, 2rem + 3vw, 4.5rem) clamp(3rem, 2rem + 3vw, 5rem);
+  background: var(--fseo-charcoal);
+  border-top: 1px solid var(--fseo-line-dark);
+}
+
+body.forgedseo-core .fseo-proof .fseo-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+body.forgedseo-core .fseo-stats {
+  display: grid;
+  gap: 1.5rem;
+}
+
+body.forgedseo-core .fseo-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+body.forgedseo-core .fseo-stat + .fseo-stat {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--fseo-line-dark);
+}
+
+body.forgedseo-core .fseo-s .fseo-stat__num {
+  font-family: var(--fseo-font-display);
+  font-size: clamp(3rem, 2rem + 2.4vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--fseo-white);
+}
+
+body.forgedseo-core .fseo-s .fseo-stat--hot .fseo-stat__num {
+  color: var(--fseo-ember-hot);
+}
+
+body.forgedseo-core .fseo-s .fseo-stat__label {
+  max-width: 20rem;
+}
+
+@media (min-width: 782px) {
+  body.forgedseo-core .fseo-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+
+  body.forgedseo-core .fseo-stat + .fseo-stat {
+    padding-top: 0;
+    padding-left: 2.5rem;
+    border-top: 0;
+    border-left: 1px solid var(--fseo-line-dark);
+  }
+}
+
+/* Pipeline */
+body.forgedseo-core .fseo-pipeline .fseo-wrap,
+body.forgedseo-core .fseo-why .fseo-wrap,
+body.forgedseo-core .fseo-plans .fseo-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 4vw, 4rem);
+}
+
+body.forgedseo-core .fseo-steps {
+  display: grid;
+  gap: 2.5rem;
+}
+
+body.forgedseo-core .fseo-step {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+body.forgedseo-core .fseo-step__head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+body.forgedseo-core .fseo-step__head::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--fseo-line);
+}
+
+body.forgedseo-core .fseo-s .fseo-step__num {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--fseo-ember-ink);
+}
+
+@media (min-width: 900px) {
+  body.forgedseo-core .fseo-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3rem;
+  }
+}
+
+/* Agents */
+body.forgedseo-core .fseo-agents {
+  background:
+    radial-gradient(50rem 36rem at 92% 10%, rgba(var(--fseo-glow), 0.12), transparent 60%),
+    var(--fseo-charcoal-deep);
+}
+
+body.forgedseo-core .fseo-split {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 6rem);
+}
+
+body.forgedseo-core .fseo-agents__list {
+  display: flex;
+  flex-direction: column;
+}
+
+body.forgedseo-core .fseo-agent {
+  display: flex;
+  gap: 1.5rem;
+  padding-block: 1.75rem;
+  border-top: 1px solid var(--fseo-steel);
+}
+
+body.forgedseo-core .fseo-agent:last-child {
+  border-bottom: 1px solid var(--fseo-steel);
+}
+
+body.forgedseo-core .fseo-agent__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+@media (min-width: 1000px) {
+  body.forgedseo-core .fseo-split {
+    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  body.forgedseo-core .fseo-split > .fseo-head {
+    position: sticky;
+    top: calc(var(--fseo-header-height) + 2rem);
+  }
+}
+
+@media (max-width: 599px) {
+  body.forgedseo-core .fseo-agent {
+    gap: 1rem;
+    padding-block: 1.375rem;
+  }
+
+  body.forgedseo-core .fseo-agent .fseo-tile {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--fseo-radius-sm);
+  }
+
+  body.forgedseo-core .fseo-agent .fseo-tile::before {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+}
+
+/* Why */
+body.forgedseo-core .fseo-reasons {
+  display: grid;
+  gap: 2.5rem 3rem;
+}
+
+body.forgedseo-core .fseo-reason {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  body.forgedseo-core .fseo-reasons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  body.forgedseo-core .fseo-reasons {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Plans */
+body.forgedseo-core .fseo-why {
+  padding-bottom: calc(var(--fseo-band-space) / 2);
+}
+
+body.forgedseo-core .fseo-plans {
+  padding-top: calc(var(--fseo-band-space) / 2);
+}
+
+body.forgedseo-core .fseo-panels {
+  display: grid;
+  gap: 2rem;
+}
+
+body.forgedseo-core .fseo-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: clamp(1.75rem, 1rem + 2.5vw, 3rem);
+  border: 1px solid var(--fseo-line);
+  border-radius: var(--fseo-radius-lg);
+  background: var(--fseo-white);
+}
+
+body.forgedseo-core .fseo-panel--dark {
+  border-color: var(--fseo-ember-ink);
+  background:
+    radial-gradient(36rem 26rem at 100% 0%, rgba(var(--fseo-glow), 0.16), transparent 65%),
+    var(--fseo-charcoal);
+  color: var(--fseo-on-dark-muted);
+}
+
+body.forgedseo-core .fseo-panel > .fseo-kicker + .fseo-h3 {
+  margin-top: -0.875rem;
+}
+
+body.forgedseo-core .fseo-s .fseo-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: -0.5rem;
+  color: var(--fseo-muted);
+  font-size: 1.125rem;
+}
+
+body.forgedseo-core .fseo-s .fseo-price strong {
+  font-family: var(--fseo-font-display);
+  font-size: clamp(2.75rem, 2rem + 2vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--fseo-ink);
+}
+
+body.forgedseo-core .fseo-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: 0;
+  list-style: none;
+}
+
+body.forgedseo-core .fseo-checks li {
+  position: relative;
+  margin: 0;
+  padding-left: 2rem;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--fseo-ink);
+}
+
+body.forgedseo-core .fseo-checks li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.125rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: var(--fseo-ember-deep);
+  -webkit-mask: url("../img/icons/check.svg") center / contain no-repeat;
+  mask: url("../img/icons/check.svg") center / contain no-repeat;
+}
+
+body.forgedseo-core .fseo-panel--dark .fseo-checks li {
+  color: var(--fseo-paper);
+}
+
+body.forgedseo-core .fseo-panel--dark .fseo-checks li::before {
+  background-color: var(--fseo-ember-hot);
+}
+
+body.forgedseo-core .fseo-panel .fseo-ctas {
+  margin-top: auto;
+}
+
+@media (min-width: 900px) {
+  body.forgedseo-core .fseo-panels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Contact + WPForms */
+body.forgedseo-core .fseo-contact {
+  background:
+    radial-gradient(50rem 36rem at 10% 100%, rgba(var(--fseo-glow), 0.18), transparent 62%),
+    var(--fseo-charcoal-deep);
+  scroll-margin-top: var(--fseo-header-height);
+}
+
+body.forgedseo-core .fseo-contact__grid {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+body.forgedseo-core .fseo-contact .fseo-head {
+  gap: 1.375rem;
+}
+
+body.forgedseo-core .fseo-form-card {
+  padding: clamp(1.375rem, 1rem + 2vw, 2.5rem);
+  border: 1px solid var(--fseo-line-dark);
+  border-radius: var(--fseo-radius-lg);
+  background: var(--fseo-charcoal);
+}
+
+@media (min-width: 1000px) {
+  body.forgedseo-core .fseo-contact__grid {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  }
+}
+
+body.forgedseo-core .fseo-form-card .wpforms-container {
+  --wpforms-field-border-radius: 10px;
+  --wpforms-field-background-color: var(--fseo-charcoal-800);
+  --wpforms-field-border-color: var(--fseo-line-dark);
+  --wpforms-field-text-color: var(--fseo-paper);
+  --wpforms-label-color: var(--fseo-paper);
+  --wpforms-label-sublabel-color: var(--fseo-steel-500);
+  --wpforms-label-error-color: var(--fseo-ember-soft);
+  --wpforms-button-background-color: var(--fseo-ember);
+  --wpforms-button-text-color: var(--fseo-charcoal-deep);
+  --wpforms-button-border-radius: 999px;
+  --wpforms-field-size-input-height: 52px;
+  margin: 0 !important;
+}
+
+body.forgedseo-core .fseo-form-card .wpforms-field {
+  padding: 0 0 1.25rem !important;
+}
+
+body.forgedseo-core .fseo-form-card .wpforms-field-medium,
+body.forgedseo-core .fseo-form-card .wpforms-field input,
+body.forgedseo-core .fseo-form-card .wpforms-field textarea {
+  max-width: 100% !important;
+}
+
+body.forgedseo-core .fseo-form-card .wpforms-field-label {
+  margin-bottom: 0.5rem !important;
+  color: var(--fseo-paper) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+}
+
+body.forgedseo-core .fseo-form-card .wpforms-field-sublabel {
+  color: var(--fseo-steel-500) !important;
+  font-size: 0.8125rem !important;
+}
+
+body.forgedseo-core .fseo-form-card .wpforms-required-label {
+  color: var(--fseo-ember-hot) !important;
+}
+
+body.forgedseo-core .fseo-form-card .wpforms-field input,
+body.forgedseo-core .fseo-form-card .wpforms-field textarea {
+  border: 1px solid var(--fseo-line-dark) !important;
+  border-radius: 10px !important;
+  background: var(--fseo-charcoal-800) !important;
+  color: var(--fseo-paper) !important;
+  font: inherit;
+  font-size: 1rem !important;
+  box-shadow: none !important;
+}
+
+body.forgedseo-core .fseo-form-card .wpforms-field textarea {
+  min-height: 8rem;
+}
+
+body.forgedseo-core .fseo-form-card .wpforms-field input:focus,
+body.forgedseo-core .fseo-form-card .wpforms-field textarea:focus {
+  border-color: var(--fseo-ember-hot) !important;
+  outline: 2px solid rgba(var(--fseo-glow), 0.35);
+  outline-offset: 1px;
+}
+
+body.forgedseo-core .fseo-form-card .wpforms-submit-container {
+  padding-top: 0.25rem !important;
+}
+
+body.forgedseo-core .fseo-form-card button.wpforms-submit {
+  height: auto !important;
+  padding: 0.95rem 1.65rem !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--fseo-ember) !important;
+  color: var(--fseo-charcoal-deep) !important;
+  font-family: var(--fseo-font-body) !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+body.forgedseo-core .fseo-form-card button.wpforms-submit:hover {
+  background: var(--fseo-ember-hot) !important;
+}
+
+body.forgedseo-core .fseo-form-card .wpforms-confirmation-container-full {
+  border: 1px solid var(--fseo-ember-ink) !important;
+  border-radius: var(--fseo-radius) !important;
+  background: var(--fseo-charcoal-800) !important;
+  color: var(--fseo-paper) !important;
+}
+
+body.forgedseo-core .fseo-form-card label.wpforms-error,
+body.forgedseo-core .fseo-form-card em.wpforms-error {
+  color: var(--fseo-ember-soft) !important;
 }
