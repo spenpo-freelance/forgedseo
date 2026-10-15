@@ -4,7 +4,9 @@
  *
  * Section markup lives in `patterns/*.php` so layout ships with the plugin
  * (rsync deploy) instead of being edited in the DB. The Home page body is a
- * single `core/pattern` reference to `forgedseo/home` (see includes/home.php).
+ * single `core/pattern` reference to `forgedseo/home` (see includes/home.php);
+ * inner pages and blog/404 templates reference `forgedseo/page-*` and
+ * `forgedseo/template-*` (see includes/pages.php).
  */
 
 if (!defined('ABSPATH')) {
@@ -122,6 +124,42 @@ function forgedseo_core_register_patterns()
             'inserter'   => false,
             'content'    => implode("\n\n", $home),
         )
+    );
+
+    foreach (forgedseo_core_page_pattern_files() as $file => $title) {
+        $markup = forgedseo_core_pattern_markup($file);
+        if ($markup === '') {
+            continue;
+        }
+
+        register_block_pattern(
+            'forgedseo/' . $file,
+            array(
+                'title'      => $title,
+                'categories' => array('forgedseo'),
+                'inserter'   => false,
+                'content'    => $markup,
+            )
+        );
+    }
+}
+
+/**
+ * Whole-page and template patterns: file name under patterns/ => title.
+ *
+ * @return array<string, string>
+ */
+function forgedseo_core_page_pattern_files()
+{
+    return array(
+        'page-service'    => __('Managed Service page', 'forgedseo-core'),
+        'page-enterprise' => __('Enterprise PaaS page', 'forgedseo-core'),
+        'page-about'      => __('About page', 'forgedseo-core'),
+        'page-privacy'    => __('Privacy Policy page', 'forgedseo-core'),
+        'page-terms'      => __('Terms of Service page', 'forgedseo-core'),
+        'template-blog'   => __('Blog index template', 'forgedseo-core'),
+        'template-single' => __('Single post template', 'forgedseo-core'),
+        'template-404'    => __('Not found template', 'forgedseo-core'),
     );
 }
 
