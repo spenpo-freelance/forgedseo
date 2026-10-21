@@ -27,6 +27,7 @@ function forgedseo_core_inline($html)
             'strong' => array(),
             'em'     => array(),
             'a'      => array('href' => true),
+            'span'   => array('class' => true),
         )
     );
 }
@@ -272,8 +273,19 @@ function forgedseo_core_s_price_card()
     return forgedseo_core_b_group(
         'fseo-price-card',
         forgedseo_core_b_p('One plan, everything included', 'fseo-kicker') . "\n\n"
-        . forgedseo_core_b_p('<strong>$1,000</strong> / month', 'fseo-price') . "\n\n"
-        . forgedseo_core_b_p('after a 30-day free trial with 12+ posts', 'fseo-price-card__sub') . "\n\n"
+        . forgedseo_core_b_p(
+            '<strong>' . esc_html(forgedseo_core_first_month_price()) . '</strong> first month '
+            . forgedseo_core_promo_chip(),
+            'fseo-price'
+        ) . "\n\n"
+        . forgedseo_core_b_p(
+            sprintf(
+                /* translators: %s: monthly price */
+                __('then %s/month', 'forgedseo-core'),
+                esc_html(forgedseo_core_monthly_price())
+            ),
+            'fseo-price-card__sub'
+        ) . "\n\n"
         . forgedseo_core_b_list(
             array(
                 '3 SEO-optimized posts per week',
@@ -587,15 +599,24 @@ function forgedseo_core_s_post_cards($query, $query_id, $after = '')
 }
 
 /**
- * Primary trial and demo buttons.
+ * Primary checkout and demo buttons.
  *
+ * @param string $demo_href
+ * @return array
+ */
+function forgedseo_core_checkout_buttons($demo_href = '#contact')
+{
+    return array(
+        array('text' => forgedseo_core_checkout_label(), 'href' => forgedseo_core_checkout_url()),
+        array('text' => 'Book a demo', 'href' => $demo_href, 'style' => 'outline'),
+    );
+}
+
+/**
  * @param string $demo_href
  * @return array
  */
 function forgedseo_core_trial_buttons($demo_href = '#contact')
 {
-    return array(
-        array('text' => 'Start 30-day free trial', 'href' => forgedseo_core_trial_url()),
-        array('text' => 'Book a demo', 'href' => $demo_href, 'style' => 'outline'),
-    );
+    return forgedseo_core_checkout_buttons($demo_href);
 }

@@ -461,7 +461,7 @@ body.forgedseo-core .hostinger-ai-page-title {
   letter-spacing: -0.03em;
 }
 
-/* Header trial CTA (includes/brand.php) */
+/* Header checkout CTA (includes/brand.php) */
 body.forgedseo-core .fseo-header-cta {
   flex-shrink: 0;
   margin-left: 1.25rem;
@@ -1062,8 +1062,9 @@ body.forgedseo-core .fseo-panel > .fseo-kicker + .fseo-h3 {
 
 body.forgedseo-core .fseo-s .fseo-price {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.5rem;
+  gap: 0.5rem 0.65rem;
   margin-top: -0.5rem;
   color: var(--fseo-muted);
   font-size: 1.125rem;
@@ -1076,6 +1077,29 @@ body.forgedseo-core .fseo-s .fseo-price strong {
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--fseo-ink);
+}
+
+body.forgedseo-core .fseo-s .fseo-price-then {
+  margin-top: -0.35rem;
+  color: var(--fseo-muted);
+  font-size: 1.0625rem;
+}
+
+body.forgedseo-core .fseo-promo-chip {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.15rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid rgba(226, 112, 58, 0.45);
+  border-radius: 999px;
+  background: rgba(226, 112, 58, 0.12);
+  color: var(--fseo-ember-ink);
+  font-family: var(--fseo-font-display);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  vertical-align: middle;
 }
 
 body.forgedseo-core .fseo-checks {
@@ -1288,6 +1312,12 @@ body.forgedseo-core .fseo-s .fseo-price-card .fseo-price {
 body.forgedseo-core .fseo-s .fseo-price-card .fseo-price strong {
   font-size: clamp(3rem, 2rem + 2.4vw, 4rem);
   color: var(--fseo-white);
+}
+
+body.forgedseo-core .fseo-s .fseo-price-card .fseo-promo-chip {
+  border-color: rgba(242, 129, 74, 0.55);
+  background: rgba(242, 129, 74, 0.16);
+  color: var(--fseo-ember-hot);
 }
 
 body.forgedseo-core .fseo-s .fseo-price-card__sub {

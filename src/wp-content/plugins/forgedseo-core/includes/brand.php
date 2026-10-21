@@ -1,6 +1,6 @@
 <?php
 /**
- * Vector lockup for core/site-logo, the header trial CTA, and footer legal links.
+ * Vector lockup for core/site-logo, the header checkout CTA, and footer legal links.
  *
  * Both are render-time filters, so no SVG upload or template-part rewrite is
  * needed. The Custom Logo attachment (see chrome.php) stays in place for
@@ -64,7 +64,7 @@ function forgedseo_core_brand_site_logo($html, $block)
 }
 
 /**
- * Append the trial CTA after the header navigation (the overlay-capable one).
+ * Append the checkout CTA after the header navigation (the overlay-capable one).
  *
  * The footer menu renders with overlayMenu "never" and is left alone.
  *
@@ -85,8 +85,8 @@ function forgedseo_core_brand_header_cta($html, $block)
 
     return $html . sprintf(
         '<a class="fseo-btn fseo-btn--primary fseo-header-cta" href="%1$s">%2$s</a>',
-        esc_url(forgedseo_core_trial_url()),
-        esc_html__('Start free trial', 'forgedseo-core')
+        esc_url(forgedseo_core_checkout_url()),
+        esc_html(forgedseo_core_checkout_label('header'))
     );
 }
 

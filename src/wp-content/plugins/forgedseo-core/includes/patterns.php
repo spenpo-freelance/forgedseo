@@ -16,13 +16,106 @@ if (!defined('ABSPATH')) {
 add_action('init', 'forgedseo_core_register_patterns', 9);
 
 /**
- * Stripe checkout for the Managed Service 30-day free trial.
+ * First-month promo code applied at Stripe checkout.
  *
+ * @return string
+ */
+function forgedseo_core_promo_code()
+{
+    return 'FORGED75';
+}
+
+/**
+ * First-month promotional price (75% off $1,000).
+ *
+ * @return string
+ */
+function forgedseo_core_first_month_price()
+{
+    return '$250';
+}
+
+/**
+ * Ongoing Managed Service price after the first month.
+ *
+ * @return string
+ */
+function forgedseo_core_monthly_price()
+{
+    return '$1,000';
+}
+
+/**
+ * Stripe Payment Link for Managed Service, with FORGED75 prefilled.
+ *
+ * @return string
+ */
+function forgedseo_core_checkout_url()
+{
+    return 'https://buy.stripe.com/fZu7sL9wo2JYdiBbhd6Zy01?prefilled_promo_code=forged75';
+}
+
+/**
  * @return string
  */
 function forgedseo_core_trial_url()
 {
-    return 'https://buy.stripe.com/fZu7sL9wo2JYdiBbhd6Zy01';
+    return forgedseo_core_checkout_url();
+}
+
+/**
+ * Header or body checkout button label.
+ *
+ * @param string $context header|body
+ * @return string
+ */
+function forgedseo_core_checkout_label($context = 'body')
+{
+    return $context === 'header'
+        ? __('Get 75% off', 'forgedseo-core')
+        : __('Get 75% off first month', 'forgedseo-core');
+}
+
+/**
+ * Hero fine print under the primary CTA.
+ *
+ * @return string
+ */
+function forgedseo_core_hero_fineprint()
+{
+    return sprintf(
+        /* translators: 1: first-month price, 2: promo code, 3: monthly price */
+        __('%1$s first month with code %2$s, then %3$s/month. Cancel anytime in month one.', 'forgedseo-core'),
+        forgedseo_core_first_month_price(),
+        forgedseo_core_promo_code(),
+        forgedseo_core_monthly_price()
+    );
+}
+
+/**
+ * Plans-panel fine print under the Managed Service CTA.
+ *
+ * @return string
+ */
+function forgedseo_core_plans_fineprint()
+{
+    return sprintf(
+        /* translators: 1: first-month price, 2: promo code, 3: monthly price */
+        __('First month is %1$s with code %2$s (75%% off). Then %3$s/month. Cancel anytime in your first month.', 'forgedseo-core'),
+        forgedseo_core_first_month_price(),
+        forgedseo_core_promo_code(),
+        forgedseo_core_monthly_price()
+    );
+}
+
+/**
+ * FORGED75 chip markup used next to first-month prices.
+ *
+ * @return string
+ */
+function forgedseo_core_promo_chip()
+{
+    return '<span class="fseo-promo-chip">' . esc_html(forgedseo_core_promo_code()) . '</span>';
 }
 
 /**

@@ -14,18 +14,18 @@ $sections = array(
             'kicker'      => 'Legal',
             'title'       => 'Privacy Policy',
             'title_class' => 'fseo-display fseo-display--m',
-            'lede'        => 'Last updated October 15, 2026',
+            'lede'        => 'Last updated October 21, 2026',
         )
     ),
     forgedseo_core_s_prose(
         array(
-            array('p', 'This policy explains what information ForgedSEO (“we”, “us”) collects when you visit forgedseo.com, contact us or start a trial, and how we use it.'),
+            array('p', 'This policy explains what information ForgedSEO (“we”, “us”) collects when you visit forgedseo.com, contact us or start a subscription, and how we use it.'),
             array('h2', 'Information we collect'),
             array(
                 'list',
                 array(
                     '<strong>Contact details</strong> you submit through our forms, such as your name, email address and message.',
-                    '<strong>Billing details</strong> when you start a trial or subscribe. Payments are processed by Stripe; we do not store full card numbers.',
+                    '<strong>Billing details</strong> when you subscribe. Payments are processed by Stripe; we do not store full card numbers.',
                     '<strong>Usage data</strong> such as pages visited, referring sites and approximate location, collected through Google Analytics.',
                     '<strong>Service data</strong> you share with us as a customer, such as brand guidelines, documents and WordPress access.',
                 ),

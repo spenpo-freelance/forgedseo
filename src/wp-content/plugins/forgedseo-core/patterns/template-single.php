@@ -19,9 +19,9 @@ $end_cta = forgedseo_core_b_group(
     forgedseo_core_b_group(
         'fseo-end-cta__copy',
         forgedseo_core_b_h('Put ForgedSEO on your site', 3, 'fseo-h3') . "\n\n"
-        . forgedseo_core_b_p('Three search-ready posts a week. 30 days free.')
+        . forgedseo_core_b_p('Three search-ready posts a week. 75% off your first month.')
     ) . "\n\n"
-    . forgedseo_core_b_buttons(array(array('text' => 'Start 30-day free trial', 'href' => forgedseo_core_trial_url())))
+    . forgedseo_core_b_buttons(array(array('text' => forgedseo_core_checkout_label(), 'href' => forgedseo_core_checkout_url())))
 );
 
 $sections = array(

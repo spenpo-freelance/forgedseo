@@ -29,7 +29,7 @@ function forgedseo_core_home_option()
  */
 function forgedseo_core_home_target_version()
 {
-    return '0.2.0';
+    return '0.4.0';
 }
 
 /**

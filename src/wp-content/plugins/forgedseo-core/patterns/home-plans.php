@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$trial = esc_url(forgedseo_core_trial_url());
+$checkout = esc_url(forgedseo_core_checkout_url());
 $managed = array(
     '3 SEO-optimized posts per week',
     'Proprietary research and fact-checking',
@@ -53,19 +53,23 @@ $list = static function ($items) {
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"className":"fseo-price"} -->
-<p class="fseo-price"><strong>$1,000</strong> / month</p>
+<p class="fseo-price"><strong><?php echo esc_html(forgedseo_core_first_month_price()); ?></strong> first month <?php echo forgedseo_core_promo_chip(); // phpcs:ignore WordPress.Security.EscapeOutput -- helper escapes. ?></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"fseo-price-then"} -->
+<p class="fseo-price-then">then <?php echo esc_html(forgedseo_core_monthly_price()); ?>/month</p>
 <!-- /wp:paragraph -->
 
 <?php echo $list($managed); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped per item. ?>
 
 <!-- wp:buttons {"className":"fseo-ctas"} -->
 <div class="wp-block-buttons fseo-ctas"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo $trial; ?>">Start 30-day free trial</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo $checkout; ?>"><?php echo esc_html(forgedseo_core_checkout_label()); ?></a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons -->
 
 <!-- wp:paragraph {"className":"fseo-fineprint"} -->
-<p class="fseo-fineprint">30-day free trial includes 12+ optimized posts. Cancel anytime in your first month. <a href="/service/">How Managed Service works</a></p>
+<p class="fseo-fineprint"><?php echo esc_html(forgedseo_core_plans_fineprint()); ?> <a href="/service/">How Managed Service works</a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 

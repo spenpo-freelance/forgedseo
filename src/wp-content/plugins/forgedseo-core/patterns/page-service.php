@@ -16,7 +16,7 @@ $sections = array(
             'title'       => 'We run the engine.<br>You get the authority.',
             'title_class' => 'fseo-display fseo-display--l',
             'lede'        => 'ForgedSEO researches, writes and publishes three search-ready posts a week to your WordPress site, grounded in your business knowledge. You approve, we handle the rest.',
-            'buttons'     => forgedseo_core_trial_buttons(),
+            'buttons'     => forgedseo_core_checkout_buttons(),
             'aside'       => forgedseo_core_s_price_card(),
         )
     ),
@@ -74,7 +74,16 @@ $sections = array(
         array(
             'sub'   => 'Something else on your mind? <a href="#contact">Book a demo</a> or email <a href="mailto:forgedseo@spenpo.com">forgedseo@spenpo.com</a>.',
             'items' => array(
-                array('What happens after the 30-day trial?', 'If you stay, it is $1,000 a month for three posts a week. Cancel anytime in your first month.'),
+                array(
+                    'What happens after the first month?',
+                    sprintf(
+                        /* translators: 1: first-month price, 2: promo code, 3: monthly price */
+                        __('First month is %1$s with code %2$s. Then %3$s a month for three posts a week. Cancel anytime in your first month.', 'forgedseo-core'),
+                        forgedseo_core_first_month_price(),
+                        forgedseo_core_promo_code(),
+                        forgedseo_core_monthly_price()
+                    ),
+                ),
                 array('Do I need to write anything?', 'No. Send brand guidelines and any documents that describe your product. The Researcher handles sources, and you approve before anything goes live.'),
                 array('What access do you need?', 'A WordPress user that can publish posts and upload media. You can revoke it at any time.'),
                 array('Can I review posts before they publish?', 'Yes. Review gates are on by default, so nothing ships without your sign-off.'),

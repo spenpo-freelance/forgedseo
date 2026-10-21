@@ -14,7 +14,7 @@ $no_results = '<!-- wp:query-no-results -->' . "\n"
         . forgedseo_core_b_p(esc_html(forgedseo_core_blog_empty_lede()), 'fseo-lede') . "\n\n"
         . forgedseo_core_b_buttons(
             array(
-                array('text' => 'Start 30-day free trial', 'href' => forgedseo_core_trial_url()),
+                array('text' => forgedseo_core_checkout_label(), 'href' => forgedseo_core_checkout_url()),
                 array('text' => 'How Managed Service works', 'href' => '/service/', 'style' => 'outline'),
             )
         )
@@ -56,7 +56,7 @@ $sections = array(
         array(
             'title'   => 'Want this running on your site?',
             'lede'    => 'Three search-ready posts a week, researched and published for you.',
-            'buttons' => forgedseo_core_trial_buttons('/#contact'),
+            'buttons' => forgedseo_core_checkout_buttons('/#contact'),
         )
     ),
 );

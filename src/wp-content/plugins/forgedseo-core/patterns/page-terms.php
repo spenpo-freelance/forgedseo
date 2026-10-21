@@ -14,19 +14,19 @@ $sections = array(
             'kicker'      => 'Legal',
             'title'       => 'Terms of Service',
             'title_class' => 'fseo-display fseo-display--m',
-            'lede'        => 'Last updated October 15, 2026',
+            'lede'        => 'Last updated October 21, 2026',
         )
     ),
     forgedseo_core_s_prose(
         array(
-            array('p', 'These terms govern your use of forgedseo.com and the ForgedSEO Managed Service and Enterprise PaaS (the “Service”). By starting a trial or using the Service, you agree to them.'),
+            array('p', 'These terms govern your use of forgedseo.com and the ForgedSEO Managed Service and Enterprise PaaS (the “Service”). By starting a subscription or using the Service, you agree to them.'),
             array('h2', 'The Service'),
             array('p', 'ForgedSEO researches, drafts and publishes content to your website using an agentic pipeline, either operated by us (Managed Service) or by your team (Enterprise PaaS). Scope, cadence and volume are agreed during onboarding.'),
-            array('h2', 'Trial, billing and cancellation'),
+            array('h2', 'Billing and cancellation'),
             array(
                 'list',
                 array(
-                    'Managed Service starts with a 30-day free trial. Unless you cancel before it ends, your subscription renews monthly at the price shown at checkout.',
+                    'Managed Service is billed monthly. New subscriptions may include a first-month promotional price applied at Stripe checkout (currently 75% off with code FORGED75); after the first month the subscription renews at the then-current monthly price shown at checkout.',
                     'Payments are processed by Stripe. Fees are billed in advance and are non-refundable except where required by law.',
                     'You can cancel anytime; cancellation takes effect at the end of the current billing period.',
                     'Enterprise PaaS pricing and terms are agreed separately in writing.',
