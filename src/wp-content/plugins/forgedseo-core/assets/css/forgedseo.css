@@ -502,6 +502,11 @@ body.fseo-designed main > .wp-block-group.alignfull:not(.fseo-s) {
   padding-block: 0 !important;
 }
 
+/* TT5 `page` template leftover above pattern heroes. Blog cards keep .fseo-card__media. */
+body.forgedseo-core.page main > .wp-block-group > .wp-block-post-featured-image {
+  display: none;
+}
+
 body.forgedseo-core .entry-content > .fseo-s,
 body.forgedseo-core .fseo-s {
   margin-block: 0;
