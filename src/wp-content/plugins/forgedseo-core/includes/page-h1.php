@@ -1,12 +1,13 @@
 <?php
 /**
- * Single H1 on Twenty Twenty-Five pages (drop template core/post-title).
+ * Single H1 on Twenty Twenty-Five pages (drop template core/post-title
+ * and core/post-featured-image).
  *
- * This marketing site owns the page H1 in post content (Home hero, product
- * names on Managed Service / Enterprise). Blog listings use the posts
- * home/index templates, not `page`. Rsync deploys skip activation hooks, so
- * this lives on init and retries until the customized `page` wp_template has
- * no post-title and still has post-content.
+ * This marketing site owns the page H1 and hero in post content (Home,
+ * Managed Service, Enterprise). Blog listings use the posts home/index
+ * templates, not `page`. Rsync deploys skip activation hooks, so this
+ * lives on init and retries until the customized `page` wp_template has
+ * no post-title, no post-featured-image, and still has post-content.
  */
 
 if (!defined('ABSPATH')) {
@@ -42,11 +43,12 @@ function forgedseo_core_page_h1_theme_slug()
  */
 function forgedseo_core_page_h1_target_version()
 {
-    return '0.1.8';
+    return '0.4.1';
 }
 
 /**
- * One-shot migrate after deploy/upgrade: strip page-template post-title.
+ * One-shot migrate after deploy/upgrade: strip page-template post-title
+ * and post-featured-image.
  *
  * @return void
  */
@@ -73,7 +75,7 @@ function forgedseo_core_page_h1_maybe_migrate()
 }
 
 /**
- * Strip post-title, tighten main top spacing, persist customized `page`.
+ * Strip post-title and post-featured-image, tighten main top spacing, persist customized `page`.
  *
  * @return bool
  */
@@ -108,7 +110,7 @@ function forgedseo_core_page_h1_migrate_page_template()
 }
 
 /**
- * Remove post-title and set main margin-top / inner padding-top toward 0.
+ * Remove post-title and post-featured-image; set main margin-top / inner padding-top toward 0.
  *
  * @param string $content
  * @return string
@@ -120,13 +122,14 @@ function forgedseo_core_page_h1_prepare_template_content($content)
     }
 
     $updated = forgedseo_core_page_h1_strip_post_title($content);
+    $updated = forgedseo_core_page_h1_strip_post_featured_image($updated);
     $updated = forgedseo_core_page_h1_tighten_spacing($updated);
 
     return is_string($updated) ? $updated : '';
 }
 
 /**
- * True when markup has post-content and no post-title.
+ * True when markup has post-content and no post-title or post-featured-image.
  *
  * @param string $content
  * @return bool
@@ -138,6 +141,10 @@ function forgedseo_core_page_h1_content_is_migrated($content)
     }
 
     if (forgedseo_core_page_h1_content_has_post_title($content)) {
+        return false;
+    }
+
+    if (forgedseo_core_page_h1_content_has_post_featured_image($content)) {
         return false;
     }
 
@@ -163,6 +170,15 @@ function forgedseo_core_page_h1_content_has_post_content($content)
 }
 
 /**
+ * @param string $content
+ * @return bool
+ */
+function forgedseo_core_page_h1_content_has_post_featured_image($content)
+{
+    return is_string($content) && (bool) preg_match('/<!--\s+wp:post-featured-image\b/', $content);
+}
+
+/**
  * Strip self-closing and paired core/post-title blocks.
  *
  * @param string $content
@@ -185,6 +201,36 @@ function forgedseo_core_page_h1_strip_post_title($content)
 
     $stripped = preg_replace(
         '/<!--\s+wp:post-title\b[^>]*-->.*?<!--\s+\/wp:post-title\s+-->\s*/s',
+        '',
+        $stripped
+    );
+
+    return is_string($stripped) ? $stripped : $content;
+}
+
+/**
+ * Strip self-closing and paired core/post-featured-image blocks.
+ *
+ * @param string $content
+ * @return string
+ */
+function forgedseo_core_page_h1_strip_post_featured_image($content)
+{
+    if (!is_string($content) || $content === '') {
+        return '';
+    }
+
+    $stripped = preg_replace(
+        '/<!--\s+wp:post-featured-image\b[^>]*\/-->\s*/',
+        '',
+        $content
+    );
+    if (!is_string($stripped)) {
+        $stripped = $content;
+    }
+
+    $stripped = preg_replace(
+        '/<!--\s+wp:post-featured-image\b[^>]*-->.*?<!--\s+\/wp:post-featured-image\s+-->\s*/s',
         '',
         $stripped
     );
