@@ -1,13 +1,15 @@
 <?php
 /**
- * Inner pages and blog/404 templates render plugin-owned patterns.
+ * Inner pages, blog/404 templates, and the author archive render plugin-owned patterns.
  *
  * Same contract as includes/home.php: on init, page bodies become a single
  * core/pattern reference (Privacy and Terms are published or created), and the
  * Twenty Twenty-Five `home`, `single` and `404` templates become header +
- * pattern + footer. Previous page bodies stay in revisions. Saving one of these
- * pages in the block editor expands the pattern and detaches it until the
- * `forgedseo_core_pages` option is cleared.
+ * pattern + footer. Author archives use `register_block_template` for
+ * `forgedseo-core//author` because TT5 has no author.html. Previous page
+ * bodies stay in revisions. Saving one of these pages in the block editor
+ * expands the pattern and detaches it until the `forgedseo_core_pages`
+ * option is cleared.
  */
 
 if (!defined('ABSPATH')) {
@@ -15,8 +17,10 @@ if (!defined('ABSPATH')) {
 }
 
 add_action('init', 'forgedseo_core_pages_maybe_migrate', 21);
+add_action('init', 'forgedseo_core_register_author_template', 22);
 add_filter('body_class', 'forgedseo_core_pages_body_class');
 add_filter('query_loop_block_query_vars', 'forgedseo_core_pages_exclude_current', 10, 2);
+add_filter('render_block_core/post-author-name', 'forgedseo_core_author_name_rel', 10, 2);
 
 /**
  * @return string
@@ -62,6 +66,66 @@ function forgedseo_core_pages_templates()
         'single' => 'forgedseo/template-single',
         '404'    => 'forgedseo/template-404',
     );
+}
+
+/**
+ * Plugin-owned author archive (TT5 has no author.html).
+ *
+ * Registered on init so rsync deploys do not need a DB migrate. The body is
+ * the same header + pattern + footer wrapper as home/single/404.
+ *
+ * @return void
+ */
+function forgedseo_core_register_author_template()
+{
+    if (!function_exists('register_block_template')) {
+        return;
+    }
+
+    if (!class_exists('WP_Block_Patterns_Registry')
+        || !WP_Block_Patterns_Registry::get_instance()->is_registered('forgedseo/template-author')
+    ) {
+        return;
+    }
+
+    register_block_template(
+        'forgedseo-core//author',
+        array(
+            'title'       => __('Author Archives', 'forgedseo-core'),
+            'description' => __('Displays one author’s posts with name, avatar, bio, and the blog card loop.', 'forgedseo-core'),
+            'content'     => forgedseo_core_pages_template_content('forgedseo/template-author'),
+        )
+    );
+}
+
+/**
+ * Add rel="author" on linked post-author-name blocks.
+ *
+ * Core’s current `core/post-author-name` render callback has `isLink` but
+ * does not output `rel`, even when the block comment includes it.
+ *
+ * @param string $content
+ * @param array  $block
+ * @return string
+ */
+function forgedseo_core_author_name_rel($content, $block)
+{
+    if (!is_string($content) || $content === '') {
+        return $content;
+    }
+
+    $attrs = isset($block['attrs']) && is_array($block['attrs']) ? $block['attrs'] : array();
+    if (empty($attrs['isLink'])) {
+        return $content;
+    }
+
+    if (preg_match('/<a\b[^>]*\brel=/i', $content)) {
+        return $content;
+    }
+
+    $updated = preg_replace('/<a\b/i', '<a rel="author"', $content, 1);
+
+    return is_string($updated) ? $updated : $content;
 }
 
 /**
@@ -223,7 +287,7 @@ function forgedseo_core_pages_migrate_template($slug, $pattern)
  */
 function forgedseo_core_pages_is_designed()
 {
-    if (is_front_page() || is_home() || is_404() || is_singular('post')) {
+    if (is_front_page() || is_home() || is_404() || is_author() || is_singular('post')) {
         return true;
     }
 

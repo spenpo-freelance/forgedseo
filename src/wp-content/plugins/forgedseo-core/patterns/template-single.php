@@ -11,7 +11,12 @@ $header = '<!-- wp:post-terms {"term":"category","className":"fseo-kicker"} /-->
     . '<!-- wp:post-title {"level":1,"className":"fseo-display fseo-display--m"} /-->' . "\n\n"
     . forgedseo_core_b_group(
         'fseo-post-meta',
-        '<!-- wp:post-date /-->' . "\n\n" . '<!-- wp:post-author-name /-->'
+        '<!-- wp:post-date /-->' . "\n\n"
+        . forgedseo_core_b_group(
+            'fseo-byline',
+            forgedseo_core_b_p(__('Forged by', 'forgedseo-core'), 'fseo-byline__prefix') . "\n\n"
+            . '<!-- wp:post-author-name {"isLink":true,"rel":"author","className":"fseo-byline__name"} /-->'
+        )
     );
 
 $end_cta = forgedseo_core_b_group(
