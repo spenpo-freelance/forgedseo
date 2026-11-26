@@ -1372,6 +1372,31 @@ body.forgedseo-core .fseo-masthead .fseo-lede {
   max-width: 40rem;
 }
 
+body.forgedseo-core .fseo-s.fseo-masthead--author > .fseo-wrap {
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+}
+
+body.forgedseo-core .fseo-masthead--author .fseo-author-avatar,
+body.forgedseo-core .fseo-masthead--author .wp-block-avatar {
+  margin: 0;
+}
+
+body.forgedseo-core .fseo-masthead--author .wp-block-avatar img {
+  display: block;
+  width: 6rem;
+  height: 6rem;
+  object-fit: cover;
+  border: 2px solid var(--fseo-line-dark);
+  border-radius: 50%;
+  background: var(--fseo-charcoal);
+}
+
+body.forgedseo-core .fseo-masthead--author .fseo-author-bio {
+  max-width: 40rem;
+}
+
 body.forgedseo-core .fseo-masthead--compact {
   padding-block: clamp(3rem, 2rem + 4vw, 5rem);
 }
@@ -1737,6 +1762,26 @@ body.forgedseo-core .fseo-post-meta > * {
 body.forgedseo-core .fseo-post-meta > * + *::before {
   content: "·";
   margin-right: 0.75rem;
+}
+
+body.forgedseo-core .fseo-byline {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35em;
+}
+
+body.forgedseo-core .fseo-s .fseo-byline p,
+body.forgedseo-core .fseo-byline__prefix,
+body.forgedseo-core .fseo-byline .wp-block-post-author-name {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+body.forgedseo-core .fseo-post-meta .fseo-byline a {
+  text-decoration: none;
 }
 
 body.forgedseo-core .fseo-post-feature {

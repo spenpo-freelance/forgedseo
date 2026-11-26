@@ -252,6 +252,7 @@ function forgedseo_core_page_pattern_files()
         'page-terms'      => __('Terms of Service page', 'forgedseo-core'),
         'template-blog'   => __('Blog index template', 'forgedseo-core'),
         'template-single' => __('Single post template', 'forgedseo-core'),
+        'template-author' => __('Author archive template', 'forgedseo-core'),
         'template-404'    => __('Not found template', 'forgedseo-core'),
     );
 }

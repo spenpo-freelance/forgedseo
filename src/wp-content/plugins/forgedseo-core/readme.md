@@ -7,6 +7,8 @@ Layouts are built from shared section builders in `includes/sections.php`:
 - Home: `patterns/home-*.php`, combined as `forgedseo/home`.
 - Managed Service, Enterprise, About, Privacy Policy and Terms: `patterns/page-*.php` (`forgedseo/page-*`). Each page body is only `<!-- wp:pattern {"slug":"forgedseo/page-…"} /-->`, set by the `forgedseo_core_pages` migration in `includes/pages.php`.
 - Blog index, single post and 404: `patterns/template-*.php`, referenced from the Twenty Twenty-Five `home`, `single` and `404` templates in the database by the same migration.
+- Author archive: `patterns/template-author.php`, registered as the `author` block template (`register_block_template( 'forgedseo-core//author' )`) because Twenty Twenty-Five has no `author.html`.
+- Author profile: `includes/author.php` migrates the `spenpo@spenpo.com` user (email lookup) to Spencer Pope / `spencer-pope` and 301s the previous author slug.
 
 Saving a page or template in the editor expands the pattern and detaches it from plugin updates. To re-attach, delete the `forgedseo_core_pages` (or `forgedseo_core_home`) option and load any page.
 
